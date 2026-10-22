@@ -176,6 +176,7 @@ File `H1rZJ8znFj6xts7VP6owEe` (DeepEdu_UI), section "Sign up" 40007815:9574. Dù
 - Các màn đăng ký **tổ chức** trong section chỉ là ảnh chụp (image 3/4/5/6/53, ảnh 5 = 6) — không có layer; code dựng theo bố cục ảnh + token `--ui-`.
 - Component app: `src/components/ui/index.jsx` (`AuthCard`, `TextField`, `Checkbox`, `MiniStepper`, `OtpInput`, `MaskIcon`, `Separator`); class nút `.ui-btn .ui-btn--primary|--tertiary`, `.ui-link`. Layout `src/layouts/AuthLayout.jsx` (header DE + footer).
 - Trợ lý (chat) section 40007823:14192 → `src/pages/chat/ChatPage.jsx`, route `/tro-ly`; dùng token landing (`--text-*`, `--bg-*`) cho khung + token `--ui-*` cho nút/thẻ khách. Ảnh quả cầu 768×1024 bị Figma kéo giãn vào 86×92 → `object-fit: fill`.
+- Trợ lý dùng layout chung `src/pages/chat/AssistantLayout.jsx` (thanh bên + menu tài khoản + header theo trang); trang con: `ChatPage`, `ProfilePage` (`/tro-ly/ho-so`), `ProfileEditPage` (`/tro-ly/ho-so/chinh-sua`), `FeedbackPage` (`/tro-ly/gop-y`). Tài khoản demo lưu localStorage qua `SignupContext`; danh sách vai trò/lĩnh vực ở `src/state/profileOptions.js`.
 - Route: `/` landing, `/tro-ly`, `/dang-nhap`, `/dang-ky`, `/dang-ky/ca-nhan[/xac-minh|/ho-so|/thanh-cong]`, `/dang-ky/to-chuc[/lien-he|/xac-nhan|/thanh-cong]`.
 
 ## 12. Mẹo khi đọc Figma file này

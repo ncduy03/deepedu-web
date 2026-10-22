@@ -1,91 +1,81 @@
-// Sample chat history shown to signed-in users in the demo (titles from the Figma "Trợ lý DeepEdu" frame).
+// Sample chat history shown to signed-in users in the demo (titles from the Figma "Trợ lý DeepEdu" frames).
 // Static content only — no AI model is involved.
 
 export const DEMO_CONVERSATIONS = [
   {
     id: 'demo-1',
-    title: 'Ma trận đề kiểm tra cuối kì I',
+    title: 'Ôn tập định lý Pythago',
     messages: [
-      { role: 'user', text: 'Lập giúp tôi ma trận đề kiểm tra cuối kì I môn Toán lớp 7, thời gian 90 phút.' },
+      { role: 'user', text: 'Giải thích giúp mình định lý Pythago và cho một ví dụ dễ hiểu.' },
       {
         role: 'assistant',
         text:
-          'Ma trận đề kiểm tra cuối kì I – Toán 7 (90 phút, thang điểm 10):\n\n' +
-          '• Số hữu tỉ: Nhận biết 1,0đ · Thông hiểu 1,0đ · Vận dụng 1,0đ\n' +
-          '• Số thực: Nhận biết 0,5đ · Thông hiểu 1,0đ\n' +
-          '• Góc và đường thẳng song song: Nhận biết 0,5đ · Thông hiểu 1,0đ · Vận dụng 1,0đ\n' +
-          '• Tam giác bằng nhau: Thông hiểu 1,0đ · Vận dụng 1,0đ · Vận dụng cao 1,0đ\n\n' +
-          'Tỉ lệ: Nhận biết 20% – Thông hiểu 40% – Vận dụng 30% – Vận dụng cao 10%.',
+          'Định lý Pythago: trong tam giác vuông, bình phương cạnh huyền bằng tổng bình phương hai cạnh góc vuông: a² + b² = c².\n\n' +
+          'Ví dụ: một chiếc thang dài 5 m dựa vào tường, chân thang cách tường 3 m. Đỉnh thang cao bao nhiêu?\n' +
+          '→ h² = 5² − 3² = 25 − 9 = 16 → h = 4 m.\n\n' +
+          'Mẹo nhớ: bộ ba (3, 4, 5), (5, 12, 13), (8, 15, 17) là các tam giác vuông “đẹp” hay gặp trong đề thi.',
       },
     ],
   },
   {
     id: 'demo-2',
-    title: 'Giáo án Bài 1 môn Toán lớp 7',
+    title: 'Tóm tắt chương 3 Kinh tế vi mô',
     messages: [
-      { role: 'user', text: 'Soạn giáo án Bài 1: Tập hợp các số hữu tỉ – Toán 7, theo Công văn 5512.' },
+      { role: 'user', text: 'Tóm tắt chương 3 Kinh tế vi mô: Lý thuyết hành vi người tiêu dùng.' },
       {
         role: 'assistant',
         text:
-          'Giáo án Bài 1 – Tập hợp các số hữu tỉ (2 tiết)\n\n' +
-          'I. Mục tiêu: nhận biết số hữu tỉ, biểu diễn số hữu tỉ trên trục số, so sánh hai số hữu tỉ.\n' +
-          'II. Thiết bị: thước thẳng, phiếu học tập, máy chiếu.\n' +
-          'III. Tiến trình:\n' +
-          '1. Mở đầu (5 phút): tình huống nhiệt độ âm/dương.\n' +
-          '2. Hình thành kiến thức (20 phút): khái niệm, trục số.\n' +
-          '3. Luyện tập (15 phút): bài 1.1 – 1.4 SGK.\n' +
-          '4. Vận dụng (5 phút): so sánh giá cổ phiếu tăng/giảm.',
+          'Chương 3 – Lý thuyết hành vi người tiêu dùng:\n\n' +
+          '• Lợi ích (utility) và quy luật lợi ích cận biên giảm dần.\n' +
+          '• Đường bàng quan: các tổ hợp hàng hoá mang lại cùng mức thoả mãn.\n' +
+          '• Đường ngân sách: giới hạn tiêu dùng theo thu nhập và giá.\n' +
+          '• Lựa chọn tối ưu: tiếp điểm giữa đường bàng quan và đường ngân sách (MRS = Px/Py).\n' +
+          '• Hiệu ứng thay thế và hiệu ứng thu nhập khi giá thay đổi.',
       },
     ],
   },
   {
     id: 'demo-3',
-    title: 'Bài kiểm tra cuối kì I',
+    title: 'Kế hoạch ôn thi IELTS 6.5',
     messages: [
-      { role: 'user', text: 'Tạo đề kiểm tra cuối kì I gồm 12 câu trắc nghiệm và 3 câu tự luận dựa trên ma trận trên.' },
+      { role: 'user', text: 'Lập kế hoạch ôn thi IELTS 6.5 trong 8 tuần, mỗi ngày 2 tiếng.' },
       {
         role: 'assistant',
         text:
-          'Phần I – Trắc nghiệm (3 điểm)\n' +
-          'Câu 1. Số nào sau đây là số hữu tỉ âm? A. 0,5  B. −3/4  C. 0  D. 2\n' +
-          'Câu 2. Kết quả của (−2/3) + 1/3 là: A. −1/3  B. 1/3  C. −1  D. 1\n' +
-          '…\n\n' +
-          'Phần II – Tự luận (7 điểm)\n' +
-          'Bài 1 (2đ). Thực hiện phép tính hợp lí.\n' +
-          'Bài 2 (2đ). Tìm x biết |x − 1/2| = 3/4.\n' +
-          'Bài 3 (3đ). Cho tam giác ABC cân tại A…',
+          'Tuần 1–2: Làm đề chẩn đoán, ôn ngữ pháp nền và 20 từ vựng/ngày theo chủ đề.\n' +
+          'Tuần 3–4: Listening Section 1–3, Reading True/False/Not Given, Writing Task 1.\n' +
+          'Tuần 5–6: Writing Task 2 (2 bài/tuần), Speaking Part 2 ghi âm tự chấm.\n' +
+          'Tuần 7–8: Làm 4 đề full test có bấm giờ, chữa lỗi và luyện phần yếu nhất.',
       },
     ],
   },
   {
     id: 'demo-4',
-    title: 'Kiểm tra nhanh',
+    title: 'Giải thích quá trình quang hợp',
     messages: [
-      { role: 'user', text: 'Cho tôi 5 câu hỏi kiểm tra nhanh 10 phút đầu giờ về số thực.' },
+      { role: 'user', text: 'Giải thích quá trình quang hợp ngắn gọn để ôn thi Sinh học 11.' },
       {
         role: 'assistant',
         text:
-          '1. Số √2 là số hữu tỉ hay vô tỉ?\n' +
-          '2. Làm tròn 3,14159 đến hàng phần trăm.\n' +
-          '3. So sánh −√5 và −2,3.\n' +
-          '4. Giá trị tuyệt đối của −7,5 là bao nhiêu?\n' +
-          '5. Sắp xếp theo thứ tự tăng dần: 1,4; √2; 1,41.',
+          'Quang hợp: 6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂ (nhờ ánh sáng và diệp lục).\n\n' +
+          '1. Pha sáng (màng thylakoid): hấp thụ ánh sáng, quang phân li nước, tạo ATP, NADPH và giải phóng O₂.\n' +
+          '2. Pha tối – chu trình Calvin (chất nền lục lạp): dùng ATP, NADPH để cố định CO₂ thành đường.',
       },
     ],
   },
   {
     id: 'demo-5',
-    title: 'Thay đổi giáo án phần bài tập về lý thuyết',
+    title: 'Viết email xin thực tập',
     messages: [
-      { role: 'user', text: 'Thay phần bài tập trong giáo án Bài 1 bằng các câu hỏi lý thuyết ngắn.' },
+      { role: 'user', text: 'Viết giúp mình email xin thực tập vị trí Data Analyst.' },
       {
         role: 'assistant',
         text:
-          'Phần luyện tập (đã cập nhật):\n' +
-          '• Số hữu tỉ là gì? Lấy 2 ví dụ.\n' +
-          '• Mọi số nguyên có phải là số hữu tỉ không? Vì sao?\n' +
-          '• Trên trục số, số hữu tỉ âm nằm ở phía nào của điểm 0?\n' +
-          '• Hai số hữu tỉ bằng nhau khi nào?',
+          'Tiêu đề: Ứng tuyển Thực tập sinh Data Analyst – Nguyễn Văn Minh\n\n' +
+          'Kính gửi Anh/Chị phụ trách tuyển dụng,\n\n' +
+          'Em là Nguyễn Văn Minh, sinh viên năm 3 Đại học Bách khoa Hà Nội. Em rất mong được thực tập vị trí Data Analyst tại Quý công ty. ' +
+          'Em thành thạo SQL, Python (pandas) và đã thực hiện dự án phân tích dữ liệu bán hàng…\n\n' +
+          'Em xin gửi kèm CV và rất mong nhận được phản hồi từ Anh/Chị.\n\nTrân trọng,\nNguyễn Văn Minh',
       },
     ],
   },

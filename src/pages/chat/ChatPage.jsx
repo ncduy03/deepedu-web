@@ -1,10 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import Logo from '../../components/Logo.jsx';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { MaskIcon } from '../../components/ui/index.jsx';
-import { useSignup } from '../../state/SignupContext.jsx';
-import { DEMO_CONVERSATIONS } from './demoConversations.js';
-import './ChatPage.css';
+import { ICON } from './AssistantLayout.jsx';
 
 const SUGGESTIONS = [
   'Giải thích định lý Pythago kèm ví dụ minh họa dễ hiểu',
@@ -17,8 +14,6 @@ const SUGGESTIONS = [
 const DEMO_REPLY =
   'Đây là bản giao diện demo: DeepEdu chưa được kết nối với mô hình AI nên chưa thể trả lời câu hỏi này. ' +
   'Khi hệ thống được kết nối, câu trả lời sẽ hiển thị tại đây.';
-
-const ICON = (name) => `/assets/chat/${name}.svg`;
 
 /** "√x" math-editor icon, reassembled from its Figma vector pieces (both groups are flipped vertically). */
 function MathEditorIcon() {
@@ -34,94 +29,6 @@ function MathEditorIcon() {
         <img src={ICON('math-g780')} alt="" />
       </span>
     </span>
-  );
-}
-
-function Sidebar({ user, history, activeId, onNewChat, onSelect, onCollapse, onSignOut }) {
-  const [menuOpen, setMenuOpen] = useState(false);
-  return (
-    <aside className="chat-sidebar">
-      <div className="chat-sidebar__nav">
-        <div className="chat-sidebar__head">
-          <Link to="/" aria-label="Trang chủ DeepEdu">
-            <Logo set="header" height={32.053} />
-          </Link>
-          <button type="button" className="chat-icon-btn" onClick={onCollapse} aria-label="Thu gọn thanh bên">
-            <img src={ICON('ic-sidebar-collapse')} alt="" width="20" height="20" />
-          </button>
-        </div>
-
-        <div className="chat-sidebar__section">
-          {user && (
-            <div className="chat-sidebar__label">
-              <span>Đoạn chat gần đây</span>
-              <img src={ICON('ic-search')} alt="" width="20" height="20" />
-            </div>
-          )}
-          <div className="chat-sidebar__list">
-            <button type="button" className="chat-new-btn" onClick={onNewChat}>
-              <img src={ICON('ic-pen')} alt="" width="20" height="20" />
-              Hội thoại mới
-            </button>
-            {user &&
-              history.map((h) => (
-                <button
-                  key={h.id}
-                  type="button"
-                  className={`chat-history-item${h.id === activeId ? ' is-active' : ''}`}
-                  onClick={() => onSelect(h.id)}
-                  title={h.title}
-                >
-                  {h.title}
-                </button>
-              ))}
-          </div>
-
-          {!user && (
-            <div className="guest-card">
-              <p className="guest-card__title">Lưu lại các cuộc trò chuyện</p>
-              <p className="guest-card__desc">Đăng nhập để xem lại lịch sử, tải tệp và tạo ảnh với DeepEdu.</p>
-              <Link to="/dang-nhap" className="ui-btn ui-btn--primary ui-btn--xs ui-btn--block">
-                Đăng nhập
-              </Link>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {user ? (
-        <div className="chat-user-wrap">
-          {menuOpen && (
-            <div className="chat-user-menu" role="menu">
-              <button type="button" role="menuitem" onClick={onSignOut}>
-                Đăng xuất
-              </button>
-            </div>
-          )}
-          <button type="button" className="chat-user" onClick={() => setMenuOpen((o) => !o)} aria-expanded={menuOpen}>
-            <span className="chat-user__avatar">{user.initial}</span>
-            <span className="chat-user__text">
-              <span className="chat-user__name">{user.name}</span>
-              <span className="chat-user__email">{user.email}</span>
-            </span>
-            <img
-              className={`chat-user__chevron${menuOpen ? ' is-open' : ''}`}
-              src={ICON('ic-alt-arrow-down-user')}
-              alt=""
-              width="20"
-              height="20"
-            />
-          </button>
-        </div>
-      ) : (
-        <div className="guest-footer">
-          <p>Bạn là trường / tổ chức?</p>
-          <Link to="/dang-nhap" className="ui-link ui-link--info ui-link--xs">
-            Đăng nhập Tổ chức
-          </Link>
-        </div>
-      )}
-    </aside>
   );
 }
 
@@ -221,175 +128,99 @@ function Composer({ value, onChange, onSend, guest, onRequireLogin, attachments,
   );
 }
 
-let nextId = 1;
-
+/** Chat area of the assistant (welcome screen or open conversation + composer). */
 export default function ChatPage() {
-  const { personal, resetPersonal } = useSignup();
+  const { user, conversations, activeId, addExchange } = useOutletContext();
   const navigate = useNavigate();
-  const user = personal.registered
-    ? {
-        name: personal.fullName || personal.email.split('@')[0],
-        email: personal.email,
-        initial: (personal.fullName || personal.email).trim()[0].toUpperCase(),
-      }
-    : null;
   const guest = !user;
-
-  const [collapsed, setCollapsed] = useState(false);
   const [draft, setDraft] = useState('');
   const [attachments, setAttachments] = useState([]);
-  // Signed-in demo users start with sample history; guests start empty. { id, title, messages: [{ role, text }] }
-  const [conversations, setConversations] = useState(() => (user ? DEMO_CONVERSATIONS : []));
-  const [activeId, setActiveId] = useState(null); // conversation shown in the main area
-  // Sidebar highlight. As in the Figma frame, the first chat is highlighted while the welcome screen shows.
-  const [highlightId, setHighlightId] = useState(() => (user ? DEMO_CONVERSATIONS[0].id : null));
   const scrollRef = useRef(null);
 
-  const open = (id) => {
-    setActiveId(id);
-    setHighlightId(id);
-  };
-
-  const active = conversations.find((c) => c.id === activeId);
-  const messages = active?.messages ?? [];
+  const messages = conversations.find((c) => c.id === activeId)?.messages ?? [];
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
   }, [messages.length]);
 
+  // A different conversation was opened from the sidebar: start with an empty composer.
+  useEffect(() => {
+    setDraft('');
+    setAttachments([]);
+  }, [activeId]);
+
   const send = (text = draft) => {
     const body = text.trim();
     if (!body) return;
-    const userMsg = { role: 'user', text: body, files: attachments.map((f) => f.name) };
-    const botMsg = { role: 'assistant', text: DEMO_REPLY };
-    if (active) {
-      setConversations((cs) =>
-        cs.map((c) => (c.id === active.id ? { ...c, messages: [...c.messages, userMsg, botMsg] } : c)),
-      );
-    } else {
-      const id = nextId++;
-      setConversations((cs) => [{ id, title: body, messages: [userMsg, botMsg] }, ...cs]);
-      open(id);
-    }
-    setDraft('');
-    setAttachments([]);
-  };
-
-  const newChat = () => {
-    setActiveId(null);
-    setHighlightId(null);
+    addExchange({ role: 'user', text: body, files: attachments.map((f) => f.name) }, { role: 'assistant', text: DEMO_REPLY });
     setDraft('');
     setAttachments([]);
   };
 
   return (
-    <div className={`chat-app${collapsed ? ' is-collapsed' : ''}`}>
-      {!collapsed && (
-        <Sidebar
-          user={user}
-          history={conversations}
-          activeId={highlightId}
-          onNewChat={newChat}
-          onSelect={open}
-          onCollapse={() => setCollapsed(true)}
-          onSignOut={() => {
-            resetPersonal();
-            navigate('/dang-nhap');
-          }}
-        />
-      )}
-
-      <main className="chat-main">
-        <header className="chat-header">
-          {collapsed && (
-            <button
-              type="button"
-              className="chat-icon-btn chat-icon-btn--expand"
-              onClick={() => setCollapsed(false)}
-              aria-label="Mở thanh bên"
-            >
-              <img src={ICON('ic-sidebar-collapse')} alt="" width="20" height="20" />
-            </button>
-          )}
-          <span className="chat-header__icon">
-            <img src={ICON('ic-notebook')} alt="" width="24" height="24" />
-          </span>
-          <h1 className="chat-header__title">Trợ lý DeepEdu</h1>
-          {guest && (
-            <div className="chat-header__actions">
-              <Link to="/dang-nhap" className="ui-btn ui-btn--tertiary ui-btn--xs">
-                Đăng nhập
-              </Link>
-              <Link to="/dang-ky" className="ui-btn ui-btn--primary ui-btn--xs">
-                Đăng ký miễn phí
-              </Link>
+    <>
+      <div className="chat-scroll" ref={scrollRef}>
+        {messages.length === 0 ? (
+          <section className="chat-welcome">
+            <div className="chat-welcome__hero">
+              <img className="chat-orb" src="/assets/chat/assistant-orb.png" alt="" />
+              <h2>Chào mừng bạn đến với DeepEdu!</h2>
+              <p>
+                {guest
+                  ? 'Hỏi bất cứ điều gì về học tập, nghiên cứu hay giảng dạy. Đăng nhập để lưu lịch sử trò chuyện và dùng đầy đủ công cụ.'
+                  : 'Hãy chia sẻ điều bạn đang muốn học, tìm hiểu hoặc cần hỗ trợ. DeepEdu sẽ đồng hành cùng bạn để tìm ra câu trả lời phù hợp nhất.'}
+              </p>
             </div>
-          )}
-        </header>
+            <div className="suggestions">
+              <p className="suggestions__title">
+                <img src={ICON('ic-stars')} alt="" width="24" height="24" />
+                Câu hỏi gợi ý
+              </p>
+              <ul>
+                {SUGGESTIONS.map((s) => (
+                  <li key={s}>
+                    <button type="button" onClick={() => send(s)}>
+                      <span>{s}</span>
+                      <img src={ICON('ic-arrow-right')} alt="" width="20" height="20" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+        ) : (
+          <section className="chat-thread" aria-live="polite">
+            {messages.map((m, i) =>
+              m.role === 'user' ? (
+                <div key={i} className="msg msg--user">
+                  {m.files?.length > 0 && <p className="msg__files">📎 {m.files.join(', ')}</p>}
+                  {m.text}
+                </div>
+              ) : (
+                <div key={i} className="msg msg--assistant">
+                  <img className="msg__avatar" src="/assets/chat/assistant-orb.png" alt="" />
+                  <p>{m.text}</p>
+                </div>
+              ),
+            )}
+          </section>
+        )}
+      </div>
 
-        <div className="chat-scroll" ref={scrollRef}>
-          {messages.length === 0 ? (
-            <section className="chat-welcome">
-              <div className="chat-welcome__hero">
-                <img className="chat-orb" src="/assets/chat/assistant-orb.png" alt="" />
-                <h2>Chào mừng bạn đến với DeepEdu!</h2>
-                <p>
-                  {guest
-                    ? 'Hỏi bất cứ điều gì về học tập, nghiên cứu hay giảng dạy. Đăng nhập để lưu lịch sử trò chuyện và dùng đầy đủ công cụ.'
-                    : 'Hãy chia sẻ điều bạn đang muốn học, tìm hiểu hoặc cần hỗ trợ. DeepEdu sẽ đồng hành cùng bạn để tìm ra câu trả lời phù hợp nhất.'}
-                </p>
-              </div>
-              <div className="suggestions">
-                <p className="suggestions__title">
-                  <img src={ICON('ic-stars')} alt="" width="24" height="24" />
-                  Câu hỏi gợi ý
-                </p>
-                <ul>
-                  {SUGGESTIONS.map((s) => (
-                    <li key={s}>
-                      <button type="button" onClick={() => send(s)}>
-                        <span>{s}</span>
-                        <img src={ICON('ic-arrow-right')} alt="" width="20" height="20" />
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </section>
-          ) : (
-            <section className="chat-thread" aria-live="polite">
-              {messages.map((m, i) =>
-                m.role === 'user' ? (
-                  <div key={i} className="msg msg--user">
-                    {m.files?.length > 0 && <p className="msg__files">📎 {m.files.join(', ')}</p>}
-                    {m.text}
-                  </div>
-                ) : (
-                  <div key={i} className="msg msg--assistant">
-                    <img className="msg__avatar" src="/assets/chat/assistant-orb.png" alt="" />
-                    <p>{m.text}</p>
-                  </div>
-                ),
-              )}
-            </section>
-          )}
-        </div>
-
-        <Composer
-          value={draft}
-          onChange={setDraft}
-          onSend={() => send()}
-          guest={guest}
-          onRequireLogin={() => navigate('/dang-nhap')}
-          attachments={attachments}
-          onAttach={(e) => {
-            const files = Array.from(e.target.files || []);
-            setAttachments((a) => [...a, ...files]);
-            e.target.value = '';
-          }}
-          onRemoveAttachment={(i) => setAttachments((a) => a.filter((_, j) => j !== i))}
-        />
-      </main>
-    </div>
+      <Composer
+        value={draft}
+        onChange={setDraft}
+        onSend={() => send()}
+        guest={guest}
+        onRequireLogin={() => navigate('/dang-nhap')}
+        attachments={attachments}
+        onAttach={(e) => {
+          const files = Array.from(e.target.files || []);
+          setAttachments((a) => [...a, ...files]);
+          e.target.value = '';
+        }}
+        onRemoveAttachment={(i) => setAttachments((a) => a.filter((_, j) => j !== i))}
+      />
+    </>
   );
 }

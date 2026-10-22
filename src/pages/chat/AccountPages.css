@@ -1,0 +1,467 @@
+/* Account pages inside the assistant shell (Hồ sơ tài khoản, Chỉnh sửa, Góp ý sản phẩm) — DeepEdu_UI tokens. */
+
+.acc-scroll {
+  flex: 1 0 0;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 32px 16px 80px;
+  color: var(--ui-content-strong);
+}
+
+.acc-content {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: 900px;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.acc-content--edit {
+  gap: 20px;
+}
+
+.acc-content--feedback {
+  width: 880px;
+}
+
+/* ---------- Profile header ---------- */
+.acc-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.acc-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: 1000px;
+  background: var(--ui-bg-fill-primary);
+  color: var(--ui-content-on-colors);
+  font-size: 24px;
+  line-height: 32px;
+  letter-spacing: -0.48px;
+  font-weight: 700;
+}
+
+.acc-header__name {
+  flex: 1 0 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.acc-header__name h2 {
+  font-size: 24px;
+  line-height: 32px;
+  letter-spacing: -0.48px;
+  font-weight: 700;
+  color: var(--ui-content-strong);
+}
+
+.acc-header__tags {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.acc-header__role {
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.14px;
+  color: var(--ui-content-medium);
+}
+
+.acc-badge {
+  padding: 2px 8px;
+  border-radius: 1000px;
+  background: var(--ui-display-primary-medium);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 700;
+  color: var(--ui-content-primary-press);
+  white-space: nowrap;
+}
+
+.acc-separator {
+  width: 100%;
+  height: 1px;
+  margin: 0;
+  border: 0;
+  background: var(--ui-border-light);
+}
+
+/* ---------- Cards ---------- */
+.acc-cards {
+  display: flex;
+  gap: 20px;
+}
+
+.acc-card {
+  flex: 1 0 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 28px;
+  border-radius: var(--ui-radius-sm);
+  background: var(--ui-bg-surface);
+  border: 1px solid var(--ui-border-light);
+}
+
+.acc-cards .acc-card {
+  min-height: 262px;
+}
+
+.acc-card--form {
+  gap: 24px;
+}
+
+.acc-card h3 {
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: -0.18px;
+  font-weight: 700;
+  color: var(--ui-content-strong);
+}
+
+.acc-card__row {
+  display: flex;
+  gap: 24px;
+}
+
+.acc-card__row > * {
+  flex: 1 0 0;
+  min-width: 0;
+}
+
+.acc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.acc-field__label {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--ui-content-light);
+}
+
+.acc-field__value {
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.14px;
+  font-weight: 500;
+  color: var(--ui-content-strong);
+  overflow-wrap: anywhere;
+}
+
+.acc-field__value.is-empty {
+  color: var(--ui-content-light);
+}
+
+.acc-field__value--inline {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.acc-note {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--ui-content-medium);
+}
+
+/* ---------- Edit form ---------- */
+.acc-readonly .ui-field__control {
+  border-style: dashed;
+  border-width: 1px;
+  padding: 0 16px;
+}
+
+.acc-readonly .ui-field__control:focus-within {
+  border-color: var(--ui-border-medium);
+  box-shadow: none;
+}
+
+.acc-year {
+  width: 280px;
+  max-width: 100%;
+}
+
+.acc-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.acc-hint {
+  margin-left: 4px;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 400;
+  color: var(--ui-content-light);
+}
+
+.acc-interest-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.acc-interest-group__title {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--ui-content-light);
+}
+
+.acc-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.acc-chip {
+  padding: 6px 14px;
+  border-radius: 1000px;
+  background: var(--ui-bg-surface);
+  border: 1px solid var(--ui-border-medium);
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.14px;
+  font-weight: 500;
+  color: var(--ui-content-strong);
+  white-space: nowrap;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.acc-chip:hover {
+  border-color: var(--ui-border-primary);
+}
+
+.acc-chip.is-selected {
+  padding: 5.5px 13.5px;
+  background: var(--ui-display-primary-medium);
+  border: 1.5px solid var(--ui-border-primary);
+  font-weight: 600;
+  color: var(--ui-content-primary-press);
+}
+
+.acc-chip--lg {
+  padding: 8px 16px;
+}
+
+.acc-chip--lg.is-selected {
+  padding: 7.5px 15.5px;
+}
+
+.acc-chip:focus-visible {
+  outline: none;
+  box-shadow: var(--ui-focus-ring);
+}
+
+.acc-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* ---------- Feedback ---------- */
+.acc-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.acc-title {
+  font-size: 20px;
+  line-height: 28px;
+  letter-spacing: -0.4px;
+  font-weight: 700;
+  color: var(--ui-content-strong);
+}
+
+.acc-subtitle {
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.14px;
+  color: var(--ui-content-medium);
+}
+
+.acc-label {
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.14px;
+  font-weight: 600;
+  color: var(--ui-content-strong);
+}
+
+.acc-rating {
+  display: flex;
+  gap: 6px;
+}
+
+.acc-star {
+  display: flex;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ui-content-light);
+  cursor: pointer;
+}
+
+.acc-star.is-on {
+  color: var(--warning-500);
+}
+
+.acc-star:focus-visible {
+  outline: none;
+  border-radius: 4px;
+  box-shadow: var(--ui-focus-ring);
+}
+
+.acc-textarea {
+  width: 100%;
+  height: 120px;
+  padding: 16px;
+  border: 1px solid var(--ui-border-medium);
+  border-radius: var(--ui-radius-xs);
+  background: var(--ui-bg-surface);
+  resize: none;
+  font: inherit;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.14px;
+  color: var(--ui-content-strong);
+  outline: none;
+}
+
+.acc-textarea::placeholder {
+  color: var(--ui-content-light);
+}
+
+.acc-textarea:focus {
+  border-color: var(--ui-border-primary);
+  box-shadow: var(--ui-focus-ring);
+}
+
+.acc-counter {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--ui-content-light);
+}
+
+.acc-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 140px;
+  border-radius: var(--ui-radius-sm);
+  background: var(--ui-bg-canvas);
+  border: 1px dashed var(--ui-border-medium);
+  text-align: center;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.acc-dropzone.is-dragging {
+  border-color: var(--ui-border-primary);
+  background: #f4f3ff;
+}
+
+.acc-dropzone__text {
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.14px;
+  color: var(--ui-content-medium);
+}
+
+.acc-dropzone__pick {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: 600;
+  color: var(--ui-content-primary);
+  cursor: pointer;
+}
+
+.acc-dropzone__pick:hover {
+  text-decoration: underline;
+}
+
+.acc-dropzone__hint {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--ui-content-light);
+}
+
+.acc-files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.acc-files li {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 4px 2px 10px;
+  border-radius: 999px;
+  background: var(--ui-bg-canvas);
+  border: 1px solid var(--ui-border-light);
+  font-size: 12px;
+  line-height: 20px;
+  color: var(--ui-content-medium);
+}
+
+.acc-files button {
+  border: 0;
+  background: none;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--ui-content-medium);
+}
+
+.acc-thanks {
+  align-items: center;
+  gap: 12px;
+  padding-top: 48px;
+  text-align: center;
+}
+
+.acc-thanks .acc-subtitle {
+  max-width: 520px;
+  margin-bottom: 12px;
+}
+
+.acc-thanks__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 1000px;
+  background: var(--ui-bg-canvas);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 760px) {
+  .acc-cards,
+  .acc-card__row {
+    flex-direction: column;
+  }
+
+  .acc-header {
+    flex-wrap: wrap;
+  }
+}

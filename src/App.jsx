@@ -4,7 +4,11 @@ import LandingPage from './pages/LandingPage.jsx';
 import AuthLayout from './layouts/AuthLayout.jsx';
 import SignupChoice from './pages/auth/SignupChoice.jsx';
 import Login from './pages/auth/Login.jsx';
+import AssistantLayout from './pages/chat/AssistantLayout.jsx';
 import ChatPage from './pages/chat/ChatPage.jsx';
+import ProfilePage from './pages/chat/ProfilePage.jsx';
+import ProfileEditPage from './pages/chat/ProfileEditPage.jsx';
+import FeedbackPage from './pages/chat/FeedbackPage.jsx';
 import PersonalAccount from './pages/auth/personal/PersonalAccount.jsx';
 import PersonalVerify from './pages/auth/personal/PersonalVerify.jsx';
 import PersonalProfile from './pages/auth/personal/PersonalProfile.jsx';
@@ -30,7 +34,12 @@ export default function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/dang-nhap" element={<Login />} />
-        <Route path="/tro-ly" element={<ChatPage />} />
+        <Route path="/tro-ly" element={<AssistantLayout />}>
+          <Route index element={<ChatPage />} />
+          <Route path="ho-so" element={<ProfilePage />} />
+          <Route path="ho-so/chinh-sua" element={<ProfileEditPage />} />
+          <Route path="gop-y" element={<FeedbackPage />} />
+        </Route>
 
         <Route element={<AuthLayout />}>
           <Route path="/dang-ky" element={<SignupChoice />} />

@@ -3,16 +3,8 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { AuthCard, Checkbox, MaskIcon, MiniStepper, Separator, TextField } from '../../../components/ui/index.jsx';
 import { useSignup } from '../../../state/SignupContext.jsx';
 import { PERSONAL_STEPS } from './steps.js';
+import { ROLES } from '../../../state/profileOptions.js';
 import '../auth.css';
-
-const ROLES = [
-  { id: 'hoc-sinh', label: 'Học sinh', icon: 'ic-user' },
-  { id: 'sinh-vien', label: 'Sinh viên', icon: 'ic-grad' },
-  { id: 'giao-vien', label: 'Giáo viên / Giảng viên', icon: 'ic-message' },
-  { id: 'nghien-cuu', label: 'Nghiên cứu viên', icon: 'ic-flask' },
-  { id: 'di-lam', label: 'Người đi làm', icon: 'ic-briefcase' },
-  { id: 'khac', label: 'Khác', icon: 'ic-sparkles-chip' },
-];
 
 const THIS_YEAR = new Date().getFullYear();
 

@@ -10,8 +10,12 @@ const EMPTY_PERSONAL = {
   birthYear: '',
   acceptTerms: false,
   marketing: false,
+  interests: [],
   registered: false,
 };
+
+// Fields of the signed-in demo account that are remembered across reloads.
+const SAVED_FIELDS = ['email', 'fullName', 'role', 'school', 'birthYear', 'interests', 'registered'];
 
 const EMPTY_ORG = {
   legalName: '',
@@ -41,8 +45,11 @@ function loadAccount() {
 
 function saveAccount(p) {
   try {
-    if (p.registered) localStorage.setItem(ACCOUNT_KEY, JSON.stringify({ email: p.email, fullName: p.fullName, registered: true }));
-    else localStorage.removeItem(ACCOUNT_KEY);
+    if (p.registered) {
+      localStorage.setItem(ACCOUNT_KEY, JSON.stringify(Object.fromEntries(SAVED_FIELDS.map((k) => [k, p[k]]))));
+    } else {
+      localStorage.removeItem(ACCOUNT_KEY);
+    }
   } catch {
     /* storage unavailable: demo login just won't persist */
   }

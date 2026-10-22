@@ -8,15 +8,16 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [sentTo, setSentTo] = useState('');
-  const { personal, updatePersonal } = useSignup();
+  const { personal, updatePersonal, resetPersonal } = useSignup();
   const navigate = useNavigate();
 
   const demoSignIn = () => {
-    updatePersonal({
-      email: sentTo,
-      fullName: personal.email === sentTo ? personal.fullName : '',
-      registered: true,
-    });
+    // Same email as the account already in this browser: keep its profile; otherwise start a fresh one.
+    if (personal.email === sentTo) updatePersonal({ registered: true });
+    else {
+      resetPersonal();
+      updatePersonal({ email: sentTo, registered: true });
+    }
     navigate('/tro-ly');
   };
 
