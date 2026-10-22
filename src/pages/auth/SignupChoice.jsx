@@ -34,13 +34,13 @@ export default function SignupChoice() {
           </p>
         </div>
         <div className="choice__ctas">
-          <Link to="/dang-ky/to-chuc" className="ui-btn ui-btn--primary ui-btn--icon-right">
+          <Link to="/dang-ky/to-chuc" className="ui-btn ui-btn--primary ui-btn--icon-left">
+            <img src="/assets/auth/ic-org-white.svg" alt="" width="24" height="24" />
             Đăng ký cho Tổ chức
-            <img src="/assets/auth/ic-arrow-right-white.svg" alt="" width="24" height="24" />
           </Link>
-          <Link to="/dang-ky/ca-nhan" className="ui-btn ui-btn--tertiary ui-btn--icon-right">
+          <Link to="/dang-ky/ca-nhan" className="ui-btn ui-btn--tertiary ui-btn--icon-left">
+            <img src="/assets/auth/ic-user-24.svg" alt="" width="24" height="24" />
             Đăng ký cho Cá nhân
-            <img src="/assets/auth/ic-arrow-right-dark.svg" alt="" width="24" height="24" />
           </Link>
         </div>
       </section>
