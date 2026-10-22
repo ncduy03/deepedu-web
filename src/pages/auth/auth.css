@@ -86,6 +86,12 @@
   border-radius: var(--ui-radius-sm);
 }
 
+.demo-login-link {
+  margin-top: 6px;
+  font-size: 13px;
+  line-height: 18px;
+}
+
 .form-success {
   padding: 10px 12px;
   border-radius: var(--ui-radius-xs);

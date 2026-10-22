@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../../components/Logo.jsx';
 import { MaskIcon } from '../../components/ui/index.jsx';
 import { useSignup } from '../../state/SignupContext.jsx';
+import { DEMO_CONVERSATIONS } from './demoConversations.js';
 import './ChatPage.css';
 
 const SUGGESTIONS = [
@@ -36,7 +37,8 @@ function MathEditorIcon() {
   );
 }
 
-function Sidebar({ user, history, activeId, onNewChat, onSelect, onCollapse }) {
+function Sidebar({ user, history, activeId, onNewChat, onSelect, onCollapse, onSignOut }) {
+  const [menuOpen, setMenuOpen] = useState(false);
   return (
     <aside className="chat-sidebar">
       <div className="chat-sidebar__nav">
@@ -88,13 +90,28 @@ function Sidebar({ user, history, activeId, onNewChat, onSelect, onCollapse }) {
       </div>
 
       {user ? (
-        <div className="chat-user">
-          <span className="chat-user__avatar">{user.initial}</span>
-          <span className="chat-user__text">
-            <span className="chat-user__name">{user.name}</span>
-            <span className="chat-user__email">{user.email}</span>
-          </span>
-          <img className="chat-user__chevron" src={ICON('ic-alt-arrow-down-user')} alt="" width="20" height="20" />
+        <div className="chat-user-wrap">
+          {menuOpen && (
+            <div className="chat-user-menu" role="menu">
+              <button type="button" role="menuitem" onClick={onSignOut}>
+                Đăng xuất
+              </button>
+            </div>
+          )}
+          <button type="button" className="chat-user" onClick={() => setMenuOpen((o) => !o)} aria-expanded={menuOpen}>
+            <span className="chat-user__avatar">{user.initial}</span>
+            <span className="chat-user__text">
+              <span className="chat-user__name">{user.name}</span>
+              <span className="chat-user__email">{user.email}</span>
+            </span>
+            <img
+              className={`chat-user__chevron${menuOpen ? ' is-open' : ''}`}
+              src={ICON('ic-alt-arrow-down-user')}
+              alt=""
+              width="20"
+              height="20"
+            />
+          </button>
         </div>
       ) : (
         <div className="guest-footer">
@@ -207,7 +224,7 @@ function Composer({ value, onChange, onSend, guest, onRequireLogin, attachments,
 let nextId = 1;
 
 export default function ChatPage() {
-  const { personal } = useSignup();
+  const { personal, resetPersonal } = useSignup();
   const navigate = useNavigate();
   const user = personal.registered
     ? {
@@ -221,9 +238,17 @@ export default function ChatPage() {
   const [collapsed, setCollapsed] = useState(false);
   const [draft, setDraft] = useState('');
   const [attachments, setAttachments] = useState([]);
-  const [conversations, setConversations] = useState([]); // { id, title, messages: [{ role, text }] }
-  const [activeId, setActiveId] = useState(null);
+  // Signed-in demo users start with sample history; guests start empty. { id, title, messages: [{ role, text }] }
+  const [conversations, setConversations] = useState(() => (user ? DEMO_CONVERSATIONS : []));
+  const [activeId, setActiveId] = useState(null); // conversation shown in the main area
+  // Sidebar highlight. As in the Figma frame, the first chat is highlighted while the welcome screen shows.
+  const [highlightId, setHighlightId] = useState(() => (user ? DEMO_CONVERSATIONS[0].id : null));
   const scrollRef = useRef(null);
+
+  const open = (id) => {
+    setActiveId(id);
+    setHighlightId(id);
+  };
 
   const active = conversations.find((c) => c.id === activeId);
   const messages = active?.messages ?? [];
@@ -244,7 +269,7 @@ export default function ChatPage() {
     } else {
       const id = nextId++;
       setConversations((cs) => [{ id, title: body, messages: [userMsg, botMsg] }, ...cs]);
-      setActiveId(id);
+      open(id);
     }
     setDraft('');
     setAttachments([]);
@@ -252,6 +277,7 @@ export default function ChatPage() {
 
   const newChat = () => {
     setActiveId(null);
+    setHighlightId(null);
     setDraft('');
     setAttachments([]);
   };
@@ -262,10 +288,14 @@ export default function ChatPage() {
         <Sidebar
           user={user}
           history={conversations}
-          activeId={activeId}
+          activeId={highlightId}
           onNewChat={newChat}
-          onSelect={setActiveId}
+          onSelect={open}
           onCollapse={() => setCollapsed(true)}
+          onSignOut={() => {
+            resetPersonal();
+            navigate('/dang-nhap');
+          }}
         />
       )}
 

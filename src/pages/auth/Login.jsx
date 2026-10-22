@@ -1,13 +1,24 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthCard, Separator, TextField } from '../../components/ui/index.jsx';
-import { isValidEmail } from '../../state/SignupContext.jsx';
+import { isValidEmail, useSignup } from '../../state/SignupContext.jsx';
 import './auth.css';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [sentTo, setSentTo] = useState('');
+  const { personal, updatePersonal } = useSignup();
+  const navigate = useNavigate();
+
+  const demoSignIn = () => {
+    updatePersonal({
+      email: sentTo,
+      fullName: personal.email === sentTo ? personal.fullName : '',
+      registered: true,
+    });
+    navigate('/tro-ly');
+  };
 
   const submit = (e) => {
     e.preventDefault();
@@ -43,9 +54,15 @@ export default function Login() {
             autoComplete="email"
           />
           {sentTo && (
-            <p className="form-success">
-              Đã gửi liên kết đăng nhập đến <b>{sentTo}</b>. Hãy kiểm tra hộp thư của bạn.
-            </p>
+            <div className="form-success">
+              <p>
+                Đã gửi liên kết đăng nhập đến <b>{sentTo}</b>. Hãy kiểm tra hộp thư của bạn.
+              </p>
+              {/* Demo only: no email is actually sent, so let the user "open" the link here. */}
+              <button type="button" className="ui-link demo-login-link" onClick={demoSignIn}>
+                Mở liên kết đăng nhập (demo) →
+              </button>
+            </div>
           )}
           <button type="submit" className="ui-btn ui-btn--primary ui-btn--block">
             Gửi liên kết đăng nhập
