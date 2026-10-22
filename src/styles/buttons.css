@@ -1,0 +1,168 @@
+/* ===== Marketing buttons (UniTeach landing tokens, radius 8) ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: var(--radius-button);
+  border: 1px solid transparent;
+  font-weight: var(--fw-semibold);
+  white-space: nowrap;
+  box-shadow: var(--shadow-xs);
+  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn--brand {
+  background: var(--btn-brand-bg);
+  border-color: var(--btn-brand-bg);
+  color: var(--btn-brand-fg);
+}
+
+.btn--brand:hover {
+  background: var(--btn-brand-bg-hover);
+  border-color: var(--btn-brand-bg-hover);
+}
+
+.btn--brand:active {
+  background: var(--btn-brand-bg-click);
+}
+
+.btn--brand-secondary {
+  background: var(--btn-brand-secondary-bg);
+  border-color: var(--btn-brand-secondary-bg);
+  color: var(--btn-brand-secondary-fg);
+}
+
+.btn--brand-secondary:hover {
+  background: var(--btn-brand-secondary-bg-hover);
+  border-color: var(--btn-brand-secondary-bg-hover);
+}
+
+.btn:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-xs), var(--focus-ring-primary);
+}
+
+.btn--md {
+  padding: 10px 16px;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.btn--lg {
+  height: 48px;
+  padding: 10px 18px;
+  font-size: 18px;
+  line-height: 28px;
+}
+
+/* ===== App buttons (DeepEdu_UI tokens, pill) ===== */
+.ui-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 48px;
+  min-height: 48px;
+  padding: 12px 20px;
+  border: 0;
+  border-radius: var(--ui-radius-action);
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: -0.16px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease, color 0.15s ease;
+}
+
+.ui-btn--icon-right {
+  padding-right: 16px;
+}
+
+.ui-btn--icon-left {
+  padding-left: 16px;
+}
+
+.ui-btn--block {
+  width: 100%;
+}
+
+.ui-btn--primary {
+  background: var(--ui-bg-fill-primary);
+  color: var(--ui-content-on-colors);
+}
+
+.ui-btn--primary:hover:not(:disabled) {
+  background: var(--ui-bg-fill-primary-hover);
+}
+
+.ui-btn--primary:active:not(:disabled) {
+  background: var(--ui-content-primary-press);
+}
+
+.ui-btn--primary:disabled {
+  background: var(--ui-bg-fill-disabled);
+  color: var(--ui-content-on-colors);
+  cursor: not-allowed;
+}
+
+.ui-btn--tertiary {
+  background: var(--ui-bg-surface);
+  color: var(--ui-content-strong);
+  border: 1px solid var(--ui-border-focus-medium);
+  box-shadow: inset 0 0 0 1px var(--ui-border-medium);
+}
+
+.ui-btn--tertiary:hover:not(:disabled) {
+  background: var(--ui-bg-canvas);
+}
+
+.ui-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--ui-focus-ring);
+}
+
+.ui-btn img {
+  flex-shrink: 0;
+}
+
+/* Text buttons (link style) */
+.ui-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.14px;
+  font-weight: 600;
+  color: var(--ui-content-primary);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.ui-link:hover {
+  text-decoration: underline;
+}
+
+.ui-link--info {
+  color: var(--ui-content-info);
+}
+
+.ui-link--neutral {
+  color: var(--ui-content-on-primary);
+}
+
+.ui-link--muted {
+  color: var(--ui-content-medium);
+  font-weight: 500;
+}
+
+.ui-link:disabled {
+  color: var(--ui-content-light);
+  cursor: default;
+  text-decoration: none;
+}
