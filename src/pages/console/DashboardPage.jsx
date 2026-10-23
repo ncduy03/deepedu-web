@@ -14,8 +14,9 @@ const C = {
   image: '#3b82f6',
 };
 const ACCOUNT_ID = 'DEEPEDU-U-2026-1043';
-const MONTH_CREDIT = 500;
-const MONTH_USED = 180;
+// Estimated API cost, at the rate used in Figma: 180 credit ≈ $11.84 ≈ 300.721đ.
+const USD_PER_CREDIT = 11.84 / 180;
+const VND_PER_USD = 300721 / 11.84;
 
 const sum = (days, task, key) => days.reduce((a, d) => a + d[task][key], 0);
 const both = (d, key) => d.chat[key] + d.image[key];
@@ -199,15 +200,17 @@ export default function DashboardPage() {
   const output = sum(days, 'chat', 'output') + sum(days, 'image', 'output');
   const credit = sum(days, 'chat', 'credit') + sum(days, 'image', 'credit');
   const paid = billing.plan.id !== 'free';
+  const usd = credit * USD_PER_CREDIT;
+  const vnd = Math.round(usd * VND_PER_USD);
 
   const kpis = [
-    { icon: 'kpi-cpu', label: 'Tổng số Requests', value: req, note: 'Tổng số câu hỏi bạn đã gửi tới Trợ lý DeepEdu' },
+    { icon: 'kpi-cpu', label: 'Tổng số Requests', value: req, note: 'Tổng số lượng requests được gửi đến hệ thống' },
     { icon: 'kpi-coins', label: 'Tổng lượng Tokens', value: formatCompact(input + output), note: `Input: ${formatCompact(input)}  •  Output: ${formatCompact(output)}` },
     {
       icon: 'kpi-dollar',
-      label: 'Credit đã dùng',
-      value: `${credit} credit`,
-      note: `Còn lại ${MONTH_CREDIT - MONTH_USED} / ${MONTH_CREDIT} credit · làm mới 01/11`,
+      label: 'Tổng chi phí ước tính',
+      value: `${vnd.toLocaleString('vi-VN')}đ`,
+      note: `Ước tính tiêu thụ API ($${usd.toFixed(2)})`,
     },
   ];
 
