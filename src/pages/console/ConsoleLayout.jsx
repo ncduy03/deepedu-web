@@ -7,6 +7,8 @@ import './Console.css';
 
 export const CICON = (name) => `/assets/console/${name}.svg`;
 
+const API_DOCS_URL = 'https://deep-edu-docs.sotatek.works/vi/docs/pricing';
+
 const BILLING = [
   { to: '/tai-khoan/goi-dich-vu', label: 'Gói dịch vụ' },
   { to: '/tai-khoan/lich-su-giao-dich', label: 'Lịch sử giao dịch' },
@@ -93,10 +95,10 @@ function Sidebar({ user, onCollapse }) {
           )}
         </div>
 
-        <button type="button" className="console-nav__item" title="Sắp ra mắt">
+        <a href={API_DOCS_URL} target="_blank" rel="noopener noreferrer" className="console-nav__item">
           <MaskIcon src={CICON('ic-asterisk')} size={24} />
           <span className="console-nav__label">Tài liệu API</span>
-        </button>
+        </a>
       </nav>
 
       <div className="console-user">
