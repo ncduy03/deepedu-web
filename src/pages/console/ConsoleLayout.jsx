@@ -20,7 +20,8 @@ const API_DOCS_URL = 'https://deep-edu-docs.sotatek.works/vi/docs/getting-starte
 
 const BILLING = [
   { to: '/tai-khoan/goi-dich-vu', label: 'Gói dịch vụ' },
-  { to: '/tai-khoan/goi-cuoc-chi-tiet', label: 'Gói cước chi tiết' },
+  // Tạm ẩn — bỏ comment dòng dưới (và route trong App.jsx) để hiện lại "Gói cước chi tiết".
+  // { to: '/tai-khoan/goi-cuoc-chi-tiet', label: 'Gói cước chi tiết' },
   { to: '/tai-khoan/lich-su-thanh-toan', label: 'Lịch sử & Thanh toán' },
 ];
 
