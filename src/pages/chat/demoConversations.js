@@ -4,13 +4,13 @@
 export const DEMO_CONVERSATIONS = [
   {
     id: 'demo-1',
-    title: 'Ôn tập định lý Pythago',
+    title: 'Ôn tập định lý Pytago',
     messages: [
-      { role: 'user', text: 'Giải thích giúp mình định lý Pythago và cho một ví dụ dễ hiểu.' },
+      { role: 'user', text: 'Giải thích giúp mình định lý Pytago và cho một ví dụ dễ hiểu.' },
       {
         role: 'assistant',
         text:
-          'Định lý Pythago: trong tam giác vuông, bình phương cạnh huyền bằng tổng bình phương hai cạnh góc vuông: a² + b² = c².\n\n' +
+          'Định lý Pytago: trong tam giác vuông, bình phương cạnh huyền bằng tổng bình phương hai cạnh góc vuông: a² + b² = c².\n\n' +
           'Ví dụ: một chiếc thang dài 5 m dựa vào tường, chân thang cách tường 3 m. Đỉnh thang cao bao nhiêu?\n' +
           '→ h² = 5² − 3² = 25 − 9 = 16 → h = 4 m.\n\n' +
           'Mẹo nhớ: bộ ba (3, 4, 5), (5, 12, 13), (8, 15, 17) là các tam giác vuông “đẹp” hay gặp trong đề thi.',

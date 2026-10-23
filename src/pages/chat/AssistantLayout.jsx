@@ -48,7 +48,9 @@ function AccountMenu({ onClose, onSignOut }) {
   return (
     <div className="account-menu" role="menu" ref={ref}>
       {item('/tro-ly/ho-so', 'ic-menu-user', 'Hồ sơ tài khoản')}
-      {item('/tai-khoan/goi-dich-vu', 'ic-menu-credit-card', 'Gói cước & credits')}
+      <hr className="account-menu__divider" />
+      {item('/tai-khoan/goi-dich-vu', 'ic-menu-credit-card', 'Gói cước & thanh toán')}
+      <hr className="account-menu__divider" />
       {item('/tro-ly/gop-y', 'ic-menu-message', 'Góp ý sản phẩm')}
       <hr className="account-menu__divider" />
       <button type="button" role="menuitem" className="account-menu__item account-menu__item--danger" onClick={onSignOut}>

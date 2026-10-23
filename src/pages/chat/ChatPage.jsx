@@ -4,7 +4,7 @@ import { MaskIcon } from '../../components/ui/index.jsx';
 import { ICON } from './AssistantLayout.jsx';
 
 const SUGGESTIONS = [
-  'Giải thích định lý Pythago kèm ví dụ minh họa dễ hiểu',
+  'Giải thích định lý Pytago kèm ví dụ minh họa dễ hiểu',
   'Tóm tắt các ý chính trong tài liệu mình vừa tải lên',
   'Lập kế hoạch ôn thi Tiếng Anh trong 4 tuần',
   'Tạo 10 câu hỏi trắc nghiệm ôn tập chủ đề Quang hợp',
