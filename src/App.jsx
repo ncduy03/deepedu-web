@@ -12,6 +12,7 @@ import FeedbackPage from './pages/chat/FeedbackPage.jsx';
 import ConsoleLayout from './pages/console/ConsoleLayout.jsx';
 import DashboardPage from './pages/console/DashboardPage.jsx';
 import PlansPage from './pages/console/PlansPage.jsx';
+import PricingPage from './pages/console/PricingPage.jsx';
 import TransactionsPage from './pages/console/TransactionsPage.jsx';
 import PersonalAccount from './pages/auth/personal/PersonalAccount.jsx';
 import PersonalVerify from './pages/auth/personal/PersonalVerify.jsx';
@@ -47,6 +48,7 @@ export default function App() {
         <Route path="/tai-khoan" element={<ConsoleLayout />}>
           <Route index element={<DashboardPage />} />
           <Route path="goi-dich-vu" element={<PlansPage />} />
+          <Route path="goi-cuoc-chi-tiet" element={<PricingPage />} />
           <Route path="lich-su-thanh-toan" element={<TransactionsPage />} />
           {/* Old links: transactions and payment methods are now one page. */}
           <Route path="lich-su-giao-dich" element={<Navigate to="/tai-khoan/lich-su-thanh-toan" replace />} />

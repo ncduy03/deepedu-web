@@ -20,12 +20,14 @@ const API_DOCS_URL = 'https://deep-edu-docs.sotatek.works/vi/docs/getting-starte
 
 const BILLING = [
   { to: '/tai-khoan/goi-dich-vu', label: 'Gói dịch vụ' },
+  { to: '/tai-khoan/goi-cuoc-chi-tiet', label: 'Gói cước chi tiết' },
   { to: '/tai-khoan/lich-su-thanh-toan', label: 'Lịch sử & Thanh toán' },
 ];
 
 const TITLES = {
   '/tai-khoan': 'Dashboard',
   '/tai-khoan/goi-dich-vu': 'Gói dịch vụ',
+  '/tai-khoan/goi-cuoc-chi-tiet': 'Gói cước chi tiết',
   '/tai-khoan/lich-su-thanh-toan': 'Lịch sử & Thanh toán',
 };
 
