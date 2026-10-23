@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../../components/Logo.jsx';
-import { MaskIcon } from '../../components/ui/index.jsx';
+import { MaskIcon, Tooltip } from '../../components/ui/index.jsx';
 import { useSignup } from '../../state/SignupContext.jsx';
+import { useCurrentUser } from '../../state/useCurrentUser.js';
 import { DEMO_CONVERSATIONS } from './demoConversations.js';
 import './ChatPage.css';
 
@@ -47,10 +48,7 @@ function AccountMenu({ onClose, onSignOut }) {
   return (
     <div className="account-menu" role="menu" ref={ref}>
       {item('/tro-ly/ho-so', 'ic-menu-user', 'Hồ sơ tài khoản')}
-      <button type="button" role="menuitem" className="account-menu__item" title="Sắp ra mắt" onClick={onClose}>
-        <img src={ICON('ic-menu-credit-card')} alt="" width="18" height="18" />
-        Gói cước &amp; credits
-      </button>
+      {item('/tai-khoan/goi-dich-vu', 'ic-menu-credit-card', 'Gói cước & credits')}
       {item('/tro-ly/gop-y', 'ic-menu-message', 'Góp ý sản phẩm')}
       <hr className="account-menu__divider" />
       <button type="button" role="menuitem" className="account-menu__item account-menu__item--danger" onClick={onSignOut}>
@@ -70,9 +68,18 @@ function Sidebar({ user, history, activeId, onNewChat, onSelect, onCollapse, onS
           <Link to="/" aria-label="Trang chủ DeepEdu">
             <Logo set="header" height={32.053} />
           </Link>
-          <button type="button" className="chat-icon-btn" onClick={onCollapse} aria-label="Thu gọn thanh bên">
-            <img src={ICON('ic-sidebar-collapse')} alt="" width="20" height="20" />
-          </button>
+          <div className="chat-sidebar__actions">
+            {user && (
+              <Tooltip label="Quản lý tài khoản">
+                <Link to="/tai-khoan" className="chat-icon-btn" aria-label="Quản lý tài khoản">
+                  <img src={ICON('ic-credit-card-switch')} alt="" width="20" height="20" />
+                </Link>
+              </Tooltip>
+            )}
+            <button type="button" className="chat-icon-btn" onClick={onCollapse} aria-label="Thu gọn thanh bên">
+              <img src={ICON('ic-sidebar-collapse')} alt="" width="20" height="20" />
+            </button>
+          </div>
         </div>
 
         <div className="chat-sidebar__section">
@@ -148,16 +155,10 @@ let nextId = 1;
  * Child routes (chat, profile, feedback) render in <Outlet /> and share the conversation state via context.
  */
 export default function AssistantLayout() {
-  const { personal, resetPersonal } = useSignup();
+  const { resetPersonal } = useSignup();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const user = personal.registered
-    ? {
-        name: personal.fullName || personal.email.split('@')[0],
-        email: personal.email,
-        initial: (personal.fullName || personal.email).trim()[0].toUpperCase(),
-      }
-    : null;
+  const user = useCurrentUser();
 
   const [collapsed, setCollapsed] = useState(false);
   // Signed-in demo users start with sample history; guests start empty. { id, title, messages: [{ role, text }] }

@@ -9,6 +9,14 @@
   --ui-bg-fill-primary-hover: #7653e2;
   --ui-bg-fill-disabled: #e0e0e0;
   --ui-display-primary-medium: #ddd9ff;
+  --ui-display-primary-strong: #322265;
+  --ui-display-gray-light: rgba(0, 0, 0, 0.06);
+  --ui-display-blue: #0087ff;
+  --ui-bg-fill-primary-subtle: rgba(19, 0, 255, 0.05);
+  --ui-bg-fill-primary-subtle-hover: rgba(19, 0, 255, 0.09);
+  --ui-bg-fill-carved: rgba(0, 0, 0, 0.04);
+  --ui-content-placeholder: #bbbbbb;
+  --ui-content-table-head: #908c83;
 
   --ui-content-strong: #202020;
   --ui-content-medium: #646464;

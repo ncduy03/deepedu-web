@@ -118,6 +118,15 @@
   background: var(--ui-bg-canvas);
 }
 
+.ui-btn--secondary {
+  background: var(--ui-bg-fill-primary-subtle);
+  color: var(--ui-content-primary-press);
+}
+
+.ui-btn--secondary:hover:not(:disabled) {
+  background: var(--ui-bg-fill-primary-subtle-hover);
+}
+
 .ui-btn:focus-visible {
   outline: none;
   box-shadow: var(--ui-focus-ring);

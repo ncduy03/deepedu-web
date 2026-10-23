@@ -43,6 +43,11 @@
   display: flex;
 }
 
+.chat-sidebar__actions {
+  display: flex;
+  align-items: center;
+}
+
 .chat-icon-btn {
   display: flex;
   align-items: center;

@@ -12,6 +12,19 @@ export function MaskIcon({ src, size = 16, className = '' }) {
   );
 }
 
+/** Dark tooltip with an up arrow, shown under its child on hover / keyboard focus. */
+export function Tooltip({ label, children, className = '' }) {
+  return (
+    <span className={`ui-tooltip ${className}`}>
+      {children}
+      <span className="ui-tooltip__bubble" role="tooltip">
+        <img className="ui-tooltip__arrow" src="/assets/console/tooltip-arrow.svg" alt="" />
+        <span className="ui-tooltip__text">{label}</span>
+      </span>
+    </span>
+  );
+}
+
 /** White card with 24px radius used by every auth / sign-up step. */
 export function AuthCard({ width = 520, className = '', children, as: Tag = 'div', ...rest }) {
   return (

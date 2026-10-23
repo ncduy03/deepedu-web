@@ -10,6 +10,51 @@
   mask-position: center;
 }
 
+/* ---------- Tooltip ---------- */
+.ui-tooltip {
+  position: relative;
+  display: inline-flex;
+}
+
+.ui-tooltip__bubble {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 8px);
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateX(-50%);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.12s ease, visibility 0.12s ease;
+}
+
+.ui-tooltip:hover .ui-tooltip__bubble,
+.ui-tooltip:focus-within .ui-tooltip__bubble {
+  opacity: 1;
+  visibility: visible;
+}
+
+.ui-tooltip__arrow {
+  display: block;
+  width: 10.4px;
+  height: 4.5px;
+  margin-bottom: 1.5px;
+}
+
+.ui-tooltip__text {
+  padding: 6px 10px;
+  border-radius: var(--ui-radius-xs);
+  background: var(--ui-content-strong);
+  color: var(--ui-content-on-colors);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
 /* ---------- Card ---------- */
 .auth-card {
   display: flex;
