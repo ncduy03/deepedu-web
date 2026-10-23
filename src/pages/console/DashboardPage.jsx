@@ -1,96 +1,233 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import { MaskIcon } from '../../components/ui/index.jsx';
 import { CICON } from './ConsoleLayout.jsx';
-import { CHART_DAYS, CHART_SERIES, METRIC_CARDS, METRICS, PERIODS } from './consoleData.js';
+import { AreaChart, BarChart, formatCompact, Legend } from './charts.jsx';
+import { GOOGLE_SHARE, PERIODS, usageFor } from './consoleData.js';
 
-// Chart geometry from Figma: 266px tall, 5 grid rows of 51.6px (8px bottom padding), values 0–40.
-const CHART_W = 993;
-const CHART_H = 266;
-const ROW_H = 51.6;
-const Y_TICKS = [40, 30, 20, 10, 0];
-const yFor = (v) => ROW_H / 2 + ((40 - v) / 40) * ROW_H * 4;
+const C = {
+  total: '#f59e0b',
+  input: '#8261f1',
+  output: '#a78bfa',
+  credit: '#10b981',
+  chat: '#10b981',
+  image: '#3b82f6',
+};
+const ACCOUNT_ID = 'DEEPEDU-U-2026-1043';
+const MONTH_CREDIT = 500;
+const MONTH_USED = 180;
 
-function UsageChart() {
-  const [filter, setFilter] = useState('all');
-  const tabs = [{ id: 'all', label: 'All' }, ...CHART_SERIES];
-  const shown = CHART_SERIES.filter((s) => filter === 'all' || s.id === filter);
+const sum = (days, task, key) => days.reduce((a, d) => a + d[task][key], 0);
+const both = (d, key) => d.chat[key] + d.image[key];
+const tokens = (d) => both(d, 'input') + both(d, 'output');
 
+function CardTitle({ icon, children }) {
   return (
-    <div className="console-chart">
-      <div className="console-chart__top">
-        <div className="console-segment" role="tablist" aria-label="Lọc theo nhà cung cấp">
-          {tabs.map((t) => (
-            <button
-              key={t.id}
-              type="button"
-              role="tab"
-              aria-selected={filter === t.id}
-              className={`console-segment__item${filter === t.id ? ' is-active' : ''}`}
-              onClick={() => setFilter(t.id)}
-            >
-              {t.label}
-            </button>
-          ))}
-        </div>
-        <ul className="console-legend">
-          {CHART_SERIES.map((s) => (
-            <li key={s.id}>
-              <span className="console-legend__dot" style={{ background: s.color }} />
-              {s.label}
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div className="console-chart__grid">
-        <div className="console-chart__plot">
-          {Y_TICKS.map((v) => (
-            <span key={v} className="console-chart__line" style={{ top: yFor(v) }} />
-          ))}
-          <div className="console-chart__days">
-            {CHART_DAYS.map((d) => (
-              <span key={d}>{d}</span>
-            ))}
-          </div>
-          <svg
-            className="console-chart__svg"
-            viewBox={`0 0 ${CHART_W} ${CHART_H}`}
-            preserveAspectRatio="none"
-            role="img"
-            aria-label="Credit sử dụng mỗi ngày theo mô hình AI"
-          >
-            {shown.map((s) => (
-              <polyline
-                key={s.id}
-                points={s.points.map(([x, v]) => `${x},${yFor(v)}`).join(' ')}
-                fill="none"
-                stroke={s.color}
-                strokeWidth="2.5"
-                strokeLinejoin="round"
-                strokeLinecap="round"
-                vectorEffect="non-scaling-stroke"
-              />
-            ))}
-          </svg>
-        </div>
-        <div className="console-chart__ticks">
-          {Y_TICKS.map((v) => (
-            <span key={v}>{v}</span>
-          ))}
-        </div>
-      </div>
-    </div>
+    <h2 className="dash-card__title">
+      <img src={CICON(icon)} alt="" width="18" height="18" />
+      {children}
+    </h2>
   );
 }
 
-/** "Dashboard" — credit usage overview of the personal account. */
-export default function DashboardPage() {
-  const [period, setPeriod] = useState('today');
-  const metrics = METRICS[period];
+/** "Thống kê sử dụng theo thời gian" with Token / Request / Credit views. */
+function UsageOverTime({ days }) {
+  const [view, setView] = useState('token');
+  const labels = days.map((d) => d.label);
+  const views = {
+    token: {
+      series: [
+        { id: 'input', label: 'Đầu vào (Input)', color: C.input, dashed: true, fill: 'rgba(130, 97, 241, 0.1)', values: days.map((d) => both(d, 'input')) },
+        { id: 'output', label: 'Đầu ra (Output)', color: C.output, dashed: true, values: days.map((d) => both(d, 'output')) },
+        { id: 'total', label: 'Tổng cộng', color: C.total, values: days.map(tokens) },
+      ],
+      legend: ['total', 'output', 'input'],
+      tooltip: (i) => ({
+        title: labels[i],
+        colored: true,
+        rows: [
+          { label: 'Tổng cộng', color: C.total, value: `${formatCompact(tokens(days[i]))} Tokens` },
+          { label: 'Đầu ra (Output)', color: C.output, value: `${formatCompact(both(days[i], 'output'))} Tokens` },
+          { label: 'Đầu vào (Input)', color: C.input, value: `${formatCompact(both(days[i], 'input'))} Tokens` },
+        ],
+      }),
+    },
+    request: {
+      series: [{ id: 'req', label: 'Số câu hỏi', color: C.input, fill: 'rgba(130, 97, 241, 0.1)', values: days.map((d) => both(d, 'req')) }],
+      tooltip: (i) => ({
+        title: labels[i],
+        colored: true,
+        rows: [{ label: 'Số câu hỏi', color: C.input, value: both(days[i], 'req') }],
+      }),
+    },
+    credit: {
+      series: [{ id: 'credit', label: 'Credit sử dụng', color: C.credit, fill: 'rgba(16, 185, 129, 0.1)', values: days.map((d) => both(d, 'credit')) }],
+      tooltip: (i) => ({
+        title: labels[i],
+        colored: true,
+        rows: [{ label: 'Credit sử dụng', color: C.credit, value: `${both(days[i], 'credit')} credit` }],
+      }),
+    },
+  };
+  const current = views[view];
+  const legendOrder = current.legend || current.series.map((s) => s.id);
 
   return (
-    <>
-      <div className="console-tabs" role="tablist" aria-label="Khoảng thời gian">
+    <section className="dash-card">
+      <div className="dash-card__head">
+        <div>
+          <CardTitle icon="ic-trend">Thống kê sử dụng theo thời gian</CardTitle>
+          <p className="dash-card__desc">Lượng Token, số câu hỏi và credit bạn đã dùng theo từng ngày</p>
+        </div>
+        <div className="console-segment" role="tablist" aria-label="Chỉ số">
+          {[
+            ['token', 'Token'],
+            ['request', 'Request'],
+            ['credit', 'Credit'],
+          ].map(([id, label]) => (
+            <button
+              key={id}
+              type="button"
+              role="tab"
+              aria-selected={view === id}
+              className={`console-segment__item${view === id ? ' is-active' : ''}`}
+              onClick={() => setView(id)}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+      <hr className="dash-card__rule" />
+      <AreaChart labels={labels} series={current.series} tooltip={current.tooltip} />
+      <Legend items={legendOrder.map((id) => current.series.find((s) => s.id === id))} />
+    </section>
+  );
+}
+
+/** "Thống kê số lượng Token theo Mô hình" — OpenAI vs Google. */
+function TokensByModel({ days }) {
+  const input = days.reduce((a, d) => a + both(d, 'input'), 0);
+  const output = days.reduce((a, d) => a + both(d, 'output'), 0);
+  const models = [
+    { label: 'openai', color: C.input, share: 1 - GOOGLE_SHARE },
+    { label: 'google', color: C.output, share: GOOGLE_SHARE },
+  ].map((m) => ({ ...m, input: input * m.share, output: output * m.share }));
+
+  return (
+    <section className="dash-card">
+      <CardTitle icon="ic-bars">Thống kê số lượng Token theo Mô hình</CardTitle>
+      <hr className="dash-card__rule" />
+      <BarChart
+        height={146}
+        bars={models.map((m) => ({ label: m.label, stacks: [{ id: m.label, color: m.color, value: m.input + m.output }] }))}
+        tooltip={(i) => ({
+          title: models[i].label,
+          rows: [
+            { label: 'Input Tokens (Prompt)', color: C.input, value: `${formatCompact(models[i].input)} Tokens` },
+            { label: 'Output Tokens (Completion)', color: C.output, value: `${formatCompact(models[i].output)} Tokens` },
+          ],
+          total: { label: 'Tổng số Token (Total)', value: `${formatCompact(models[i].input + models[i].output)} Tokens` },
+        })}
+      />
+    </section>
+  );
+}
+
+/** "Sử dụng theo loại tác vụ" — requests, tokens and credit per day, split chat / image. */
+function UsageByTask({ days }) {
+  const active = days.filter((d) => both(d, 'req') > 0);
+  const charts = [
+    { title: 'Số câu hỏi (Requests)', value: (t) => t.req, total: 'Tổng câu hỏi', fmt: String },
+    { title: 'Lượng Token Tiêu Thụ', value: (t) => t.input + t.output, total: 'Tổng Token', fmt: formatCompact },
+    { title: 'Credit tiêu thụ', value: (t) => t.credit, total: 'Tổng credit', fmt: String },
+  ];
+
+  return (
+    <section className="dash-card">
+      <CardTitle icon="ic-key">Sử dụng theo loại tác vụ</CardTitle>
+      <hr className="dash-card__rule" />
+      {active.length ? (
+        <div className="dash-minis">
+          {charts.map((c) => (
+            <div key={c.title} className="dash-mini">
+              <p className="dash-mini__title">{c.title}</p>
+              <BarChart
+                compact
+                height={120}
+                bars={active.map((d) => ({
+                  label: d.label,
+                  stacks: [
+                    { id: 'chat', color: C.chat, value: c.value(d.chat) },
+                    { id: 'image', color: C.image, value: c.value(d.image) },
+                  ],
+                }))}
+                tooltip={(i) => ({
+                  title: active[i].label,
+                  rows: [
+                    { label: 'Trò chuyện', color: C.chat, value: c.fmt(c.value(active[i].chat)) },
+                    { label: 'Tạo ảnh', color: C.image, value: c.fmt(c.value(active[i].image)) },
+                  ],
+                  total: { label: c.total, value: c.fmt(c.value(active[i].chat) + c.value(active[i].image)) },
+                })}
+              />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="dash-empty">Chưa có hoạt động trong khoảng thời gian này.</p>
+      )}
+      <Legend
+        items={[
+          { label: 'Trò chuyện', color: C.chat },
+          { label: 'Tạo ảnh', color: C.image },
+        ]}
+      />
+    </section>
+  );
+}
+
+/** "Dashboard" — usage and credit overview of the personal account. */
+export default function DashboardPage() {
+  const { user, billing } = useOutletContext();
+  const [period, setPeriod] = useState('7d');
+  const days = useMemo(() => usageFor(period), [period]);
+
+  const req = sum(days, 'chat', 'req') + sum(days, 'image', 'req');
+  const input = sum(days, 'chat', 'input') + sum(days, 'image', 'input');
+  const output = sum(days, 'chat', 'output') + sum(days, 'image', 'output');
+  const credit = sum(days, 'chat', 'credit') + sum(days, 'image', 'credit');
+  const paid = billing.plan.id !== 'free';
+
+  const kpis = [
+    { icon: 'kpi-cpu', label: 'Tổng số Requests', value: req, note: 'Tổng số câu hỏi bạn đã gửi tới Trợ lý DeepEdu' },
+    { icon: 'kpi-coins', label: 'Tổng lượng Tokens', value: formatCompact(input + output), note: `Input: ${formatCompact(input)}  •  Output: ${formatCompact(output)}` },
+    {
+      icon: 'kpi-dollar',
+      label: 'Credit đã dùng',
+      value: `${credit} credit`,
+      note: `Còn lại ${MONTH_CREDIT - MONTH_USED} / ${MONTH_CREDIT} credit · làm mới 01/11`,
+    },
+  ];
+
+  return (
+    <div className="console-page dash">
+      <section className="dash-profile">
+        <div className="dash-profile__title">
+          <span className="dash-profile__avatar">{user.initial}</span>
+          <h2>{user.name}</h2>
+          <span className="dash-badge dash-badge--primary">Cá nhân</span>
+          <span className={`dash-badge ${paid ? 'dash-badge--positive' : 'dash-badge--neutral'}`}>
+            ● Gói {billing.plan.name}
+          </span>
+        </div>
+        <p className="dash-profile__desc">
+          Theo dõi lượng sử dụng và credit của tài khoản cá nhân trên DeepEdu.{'  •  '}Mã tài khoản:{' '}
+          <strong>{ACCOUNT_ID}</strong>
+        </p>
+      </section>
+
+      <div className="console-tabs dash-tabs" role="tablist" aria-label="Khoảng thời gian">
         {PERIODS.map((p) => (
           <button
             key={p.id}
@@ -98,7 +235,8 @@ export default function DashboardPage() {
             role="tab"
             aria-selected={period === p.id}
             className={`console-tabs__item${period === p.id ? ' is-active' : ''}`}
-            onClick={() => setPeriod(p.id)}
+            onClick={() => !p.soon && setPeriod(p.id)}
+            title={p.soon ? 'Sắp ra mắt' : undefined}
           >
             {p.icon && <MaskIcon src={CICON(p.icon)} size={24} />}
             {p.label}
@@ -106,31 +244,22 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      <div className="console-page console-page--dashboard">
-        <div className="console-metrics">
-          {METRIC_CARDS.map((m) => (
-            <div key={m.key} className="console-metric">
-              <span className="console-metric__icon">
-                <img src={CICON(m.icon)} alt="" width="20" height="20" />
-              </span>
-              <div className="console-metric__text">
-                <p className="console-metric__label">{m.label}</p>
-                <p className="console-metric__value">{metrics[m.key]}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <section className="console-section">
-          <div className="console-section__head">
-            <h2>Credit sử dụng theo mô hình</h2>
-            <p className="console-section__caption console-section__caption--body">
-              Số credit bạn đã dùng mỗi ngày, phân theo mô hình AI.
-            </p>
+      <div className="dash-kpis">
+        {kpis.map((k) => (
+          <div key={k.label} className="dash-kpi">
+            <span className="dash-kpi__icon">
+              <img src={CICON(k.icon)} alt="" width="16" height="16" />
+            </span>
+            <p className="dash-kpi__label">{k.label}</p>
+            <p className="dash-kpi__value">{k.value}</p>
+            <p className="dash-kpi__note">{k.note}</p>
           </div>
-          <UsageChart />
-        </section>
+        ))}
       </div>
-    </>
+
+      <UsageOverTime days={days} />
+      <TokensByModel days={days} />
+      <UsageByTask days={days} />
+    </div>
   );
 }

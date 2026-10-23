@@ -131,6 +131,7 @@ export default function ConsoleLayout() {
     plan: PLANS.find((p) => p.id === planId),
     setPlanId,
     card,
+    setCard,
     removeCard: () => setCard(null),
     wallets,
     removeWallet: (id) => setWallets((ws) => ws.filter((w) => w.id !== id)),

@@ -1,5 +1,6 @@
 import { useOutletContext } from 'react-router-dom';
 import { CICON } from './ConsoleLayout.jsx';
+import { CardSection } from './CardSection.jsx';
 
 /** "Phương thức thanh toán" — linked card / e-wallets and auto-renew setting. */
 export default function PaymentMethodsPage() {
@@ -26,25 +27,7 @@ export default function PaymentMethodsPage() {
         </div>
 
         <div className="console-methods">
-          {card && (
-            <div className="console-card">
-              <img src={CICON('visa-card')} alt="Visa" width="64" height="64" />
-              <div className="console-card__info">
-                <p className="console-card__number">•••• {card.last4}</p>
-                <p className="console-card__meta">
-                  <strong>{card.holder}</strong>
-                  <span>Hết hạn:</span>
-                  <strong>{card.expiry}</strong>
-                </p>
-              </div>
-              <button type="button" className="ui-btn ui-btn--tertiary ui-btn--xs" title="Sắp ra mắt">
-                Cập nhật thông tin
-              </button>
-              <button type="button" className="console-trash" onClick={removeCard} aria-label="Xoá thẻ">
-                <img src={CICON('ic-trash')} alt="" width="24" height="24" />
-              </button>
-            </div>
-          )}
+          <CardSection card={card} setCard={billing.setCard} removeCard={removeCard} security={false} allowAdd={false} />
 
           {wallets.map((w) => (
             <div key={w.id} className="console-wallet">

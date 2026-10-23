@@ -1,17 +1,17 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import { MaskIcon } from '../../components/ui/index.jsx';
 import { CICON } from './ConsoleLayout.jsx';
-import { RANGES, STATUS, TRANSACTIONS } from './consoleData.js';
+import { CardSection } from './CardSection.jsx';
+import { RANGES, STATUS, TRANSACTIONS, USAGE_TODAY } from './consoleData.js';
 
 const PAGE_SIZE = 7;
-// Ranges count back from the latest transaction, so the demo data stays in range whatever today's date is.
-const LATEST = Math.max(...TRANSACTIONS.map((t) => t.date.getTime()));
 
 const COLUMNS = [
   { key: 'time', label: 'Thời gian (time)' },
   { key: 'id', label: 'Mã giao dịch (transaction ID)' },
   { key: 'amount', label: 'Số tiền thanh toán' },
-  { key: 'content', label: 'Nội dung', sortable: true },
+  { key: 'content', label: 'Credit nhận được', sortable: true },
   { key: 'method', label: 'Phương thức thanh toán', sortable: true },
   { key: 'status', label: 'Trạng thái' },
 ];
@@ -60,7 +60,7 @@ function CopyButton({ text }) {
 }
 
 function exportCsv(rows) {
-  const header = ['Thời gian', 'Mã giao dịch', 'Số tiền', 'Nội dung', 'Phương thức', 'Trạng thái'];
+  const header = ['Thời gian', 'Mã giao dịch', 'Số tiền', 'Credit nhận được', 'Phương thức', 'Trạng thái'];
   const lines = [header, ...rows.map((t) => [t.time, t.id, t.amount, t.content, t.method.label, STATUS[t.status]])];
   const csv = lines.map((l) => l.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
   const url = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' }));
@@ -71,17 +71,19 @@ function exportCsv(rows) {
   URL.revokeObjectURL(url);
 }
 
-/** "Lịch sử giao dịch" — payments and credit top-ups with search, filters and CSV export. */
+/** "Lịch sử giao dịch" — linked card, then payments and credit top-ups with search, filters and CSV export. */
 export default function TransactionsPage() {
+  const { billing } = useOutletContext();
   const [query, setQuery] = useState('');
-  const [range, setRange] = useState('6');
+  const [range, setRange] = useState('30d');
   const [status, setStatus] = useState('all');
   const [sort, setSort] = useState(null); // { key, dir: 1 | -1 }
   const [page, setPage] = useState(1);
 
   const rows = useMemo(() => {
-    const months = RANGES.find((r) => r.id === range).months;
-    const from = months ? new Date(LATEST).setMonth(new Date(LATEST).getMonth() - months) : -Infinity;
+    // Ranges count back from the demo "today", so the sample data looks the same whenever it is opened.
+    const days = RANGES.find((r) => r.id === range).days;
+    const from = days ? USAGE_TODAY.getTime() - days * 86400000 : -Infinity;
     const q = query.trim().toLowerCase();
     const list = TRANSACTIONS.filter(
       (t) =>
@@ -105,19 +107,30 @@ export default function TransactionsPage() {
     setSort((s) => (s?.key === key ? (s.dir === 1 ? { key, dir: -1 } : null) : { key, dir: 1 }));
 
   return (
-    <div className="console-page">
+    <div className="console-page console-page--history">
+      <section className="console-section">
+        <div className="console-section__head">
+          <h2>Thẻ thanh toán</h2>
+          <p className="console-section__caption">Thẻ Visa, Mastercard, JCB được mã hóa và liên kết với tài khoản</p>
+        </div>
+        <div className="console-methods">
+          <CardSection card={billing.card} setCard={billing.setCard} removeCard={billing.removeCard} />
+        </div>
+      </section>
+
+      <section className="console-section">
       <div className="console-section__head">
-        <h2>Giao dịch &amp; hoá đơn</h2>
-        <p className="console-section__caption">Tra cứu các lần thanh toán gói, mua thêm credit và tải hoá đơn.</p>
+        <h2>Giao dịch nạp tiền &amp; credit</h2>
+        <p className="console-section__caption">Tra cứu và xuất hoá đơn chi tiết các lượt nạp thêm credit và gói tháng</p>
       </div>
 
       <div className="console-toolbar">
         <div className="console-toolbar__filters">
-          <label className="console-search">
+          <label className="console-search console-search--wide">
             <img src={CICON('ic-search')} alt="" width="24" height="24" />
             <input
               type="search"
-              placeholder="Tìm theo mã giao dịch"
+              placeholder="Tìm theo mã giao dịch (TOPUP-... / SUB-...)"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               aria-label="Tìm theo mã giao dịch"
@@ -206,7 +219,13 @@ export default function TransactionsPage() {
         </div>
       </div>
 
-      {pages > 1 && (
+      <p className="console-result-count">
+        {rows.length
+          ? `Hiển thị ${(page - 1) * PAGE_SIZE + 1}-${(page - 1) * PAGE_SIZE + visible.length} trong tổng số ${rows.length} kết quả`
+          : 'Không có kết quả'}
+      </p>
+
+      {rows.length > 0 && (
         <nav className="console-pagination" aria-label="Phân trang">
           <button
             type="button"
@@ -245,6 +264,7 @@ export default function TransactionsPage() {
           </button>
         </nav>
       )}
+      </section>
     </div>
   );
 }
