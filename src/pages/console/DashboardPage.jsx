@@ -138,7 +138,7 @@ function TokensByModel({ days }) {
 function UsageByTask({ days }) {
   const active = days.filter((d) => both(d, 'req') > 0);
   const charts = [
-    { title: 'Số câu hỏi (Requests)', value: (t) => t.req, total: 'Tổng câu hỏi', fmt: String },
+    { title: 'Số câu hỏi (Requests)', value: (t) => t.req, total: 'Tổng requests', fmt: String },
     { title: 'Lượng Token Tiêu Thụ', value: (t) => t.input + t.output, total: 'Tổng Token', fmt: formatCompact },
     { title: 'Credit tiêu thụ', value: (t) => t.credit, total: 'Tổng credit', fmt: String },
   ];
@@ -164,6 +164,7 @@ function UsageByTask({ days }) {
                 }))}
                 tooltip={(i) => ({
                   title: active[i].label,
+                  titleDivider: true,
                   rows: [
                     { label: 'Trò chuyện', color: C.chat, value: c.fmt(c.value(active[i].chat)) },
                     { label: 'Tạo ảnh', color: C.image, value: c.fmt(c.value(active[i].image)) },

@@ -58,10 +58,11 @@ function smoothPath(pts) {
  * Chart tooltip (Figma "Chart/Tooltip").
  * `colored` rows print "Label : value" in the series colour; otherwise a dot, grey label and bold value.
  */
-export function ChartTooltip({ title, rows, total, colored, style }) {
+export function ChartTooltip({ title, rows, total, colored, titleDivider, style }) {
   return (
     <div className="chart-tooltip" style={style} role="tooltip">
-      <p className="chart-tooltip__title">{title}</p>
+      <p className={`chart-tooltip__title${titleDivider ? ' chart-tooltip__title--strong' : ''}`}>{title}</p>
+      {titleDivider && <hr className="chart-tooltip__divider" />}
       {rows.map((r) =>
         colored ? (
           <p key={r.label} className="chart-tooltip__colored" style={{ color: r.color }}>

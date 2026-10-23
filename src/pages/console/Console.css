@@ -834,6 +834,10 @@
   color: var(--ui-content-strong);
 }
 
+.chart-tooltip__title--strong {
+  font-weight: 700;
+}
+
 .chart-tooltip__row {
   display: flex;
   align-items: center;
