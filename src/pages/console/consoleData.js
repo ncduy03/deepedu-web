@@ -47,7 +47,7 @@ export function usageFor(periodId) {
 // ---------- Plans ----------
 export const PLANS = [
   { id: 'free', name: 'Free', price: '0đ / Miễn phí', credit: '100 credit', label: 'Free' },
-  { id: 'plus', name: 'Plus', price: '79.000đ / tháng', credit: '500 credit', label: 'Plus · 79.000đ / tháng' },
+  { id: 'plus', popular: true, name: 'Plus', price: '79.000đ / tháng', credit: '500 credit', label: 'Plus · 79.000đ / tháng' },
   { id: 'pro', name: 'Pro', price: '199.000đ / tháng', credit: '1.500 credit', label: 'Pro · 199.000đ / tháng' },
   { id: 'pro-year', name: 'Pro (năm)', price: '1.990.000đ / năm', credit: '1.500 credit / tháng', label: 'Pro · 1.990.000đ / năm' },
 ];
@@ -65,9 +65,9 @@ export const PLAN_SECTIONS = [
     title: 'Tính năng cốt lõi',
     rows: [
       { label: 'Trợ lý DeepEdu (chat)', plans: ['free', 'plus', 'pro', 'pro-year'] },
-      { label: 'Tải tệp & phân tích tài liệu', plans: ['free', 'plus', 'pro', 'pro-year'] },
-      { label: 'Tạo ảnh bằng AI', plans: ['plus', 'pro', 'pro-year'] },
-      { label: 'Mô hình AI nâng cao', plans: ['pro', 'pro-year'] },
+      { label: 'Soạn giáo án', plans: ['free', 'plus', 'pro', 'pro-year'] },
+      { label: 'Tạo bài tập', plans: ['plus', 'pro', 'pro-year'] },
+      { label: 'Tạo bản trình chiếu', plans: ['pro', 'pro-year'] },
     ],
   },
 ];
@@ -129,8 +129,3 @@ export const RANGES = [
 
 // ---------- Payment methods ----------
 export const CARD = { last4: '4242', holder: 'NGUYEN VAN MINH', expiry: '12/27' };
-
-export const WALLETS = [
-  { id: 'momo', name: 'Ví MoMo', short: 'MoMo', color: '#a50064', phone: '090****567' },
-  { id: 'zalopay', name: 'ZaloPay', short: 'Zalo', color: '#0069e0', phone: '090****567' },
-];

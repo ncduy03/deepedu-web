@@ -1006,96 +1006,14 @@
 }
 
 /* ---------- Plans ---------- */
-.console-current {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 16px 24px;
-  padding: 16px 24px;
-  border: 1px solid var(--ui-border-primary-light);
-  border-radius: var(--ui-radius-sm);
-  background: var(--ui-display-primary-medium);
-}
-
-.console-current p {
-  margin: 0;
-}
-
-.console-current__plan,
-.console-current__renew {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  white-space: nowrap;
-}
-
-.console-current__label {
-  font-size: 12px;
-  line-height: 16px;
-  color: var(--ui-content-medium);
-}
-
-.console-current__name {
-  font-size: 18px;
-  line-height: 24px;
-  letter-spacing: -0.18px;
-  font-weight: 700;
-  color: var(--ui-content-primary-press);
-}
-
-.console-current__date {
-  font-size: 14px;
-  line-height: 20px;
-  letter-spacing: -0.14px;
-  font-weight: 600;
-}
-
-.console-current__usage {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  flex: 1 0 200px;
-  min-width: 0;
-}
-
-.console-current__usage-label {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  font-size: 12px;
-  line-height: 16px;
-  color: var(--ui-content-medium);
-}
-
-.console-current__usage-label strong {
-  font-weight: 700;
-  color: var(--ui-content-strong);
-}
-
-.console-progress {
-  height: 8px;
-  overflow: hidden;
-  border-radius: 1000px;
-  background: var(--ui-bg-surface);
-}
-
-.console-progress span {
-  display: block;
-  height: 100%;
-  border-radius: 4px;
-  background: var(--ui-bg-fill-primary);
-}
-
-.console-current__btn {
-  padding: 8px 16px;
-}
-
 .console-table-scroll {
   overflow-x: auto;
 }
 
 .console-plans {
+  position: relative;
   min-width: 860px;
+  padding: 32px 0 16px;
 }
 
 .console-plans__row {
@@ -1117,8 +1035,34 @@
   text-align: center;
 }
 
-.console-plans__cell.is-current {
+/* "PHỔ BIẾN" tag + outline around the popular plan column (grid: 300px + 4 equal columns). */
+.console-plans__popular {
+  --col-w: calc((100% - 300px) / 4);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(300px + var(--col-w) * var(--col));
+  width: var(--col-w);
+  border: 1px solid var(--ui-border-primary);
+  border-radius: 12px;
   background: var(--ui-bg-fill-primary-subtle);
+  pointer-events: none;
+}
+
+.console-plans__popular span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  margin: -1px -1px 0;
+  border-radius: 12px 12px 0 0;
+  background: var(--ui-bg-fill-primary);
+  color: var(--ui-content-on-colors);
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.72px;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
 .console-plans__row--head .console-plans__cell {
@@ -1542,51 +1486,6 @@ span.console-plan-btn {
   filter: brightness(0.6);
 }
 
-.console-wallet {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 16px 24px;
-  border: 1px solid var(--ui-border-light);
-  border-radius: var(--ui-radius-sm);
-  background: var(--ui-bg-surface);
-}
-
-.console-wallet__logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 48px;
-  height: 36px;
-  border-radius: 6px;
-  color: var(--ui-content-on-colors);
-  font-size: 12px;
-  line-height: 16px;
-  font-weight: 700;
-}
-
-.console-wallet__text {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  flex: 1 0 0;
-  min-width: 0;
-}
-
-.console-wallet__name {
-  font-size: 14px;
-  line-height: 20px;
-  letter-spacing: -0.14px;
-  font-weight: 600;
-}
-
-.console-wallet__phone {
-  font-size: 12px;
-  line-height: 16px;
-  color: var(--ui-content-medium);
-}
-
 .console-add-method {
   padding: 14px;
   border: 1px dashed var(--ui-border-medium);
@@ -1634,57 +1533,6 @@ span.console-plan-btn {
   color: var(--ui-content-medium);
 }
 
-.console-renew {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 20px 24px;
-  border: 1px solid var(--ui-border-light);
-  border-radius: var(--ui-radius-sm);
-  background: var(--ui-bg-surface);
-}
-
-.console-renew h3 {
-  margin: 0;
-  font-size: 18px;
-  line-height: 24px;
-  letter-spacing: -0.18px;
-  font-weight: 700;
-}
-
-.console-renew__row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 16px;
-}
-
-.console-renew__row p {
-  flex: 1 0 280px;
-  margin: 0;
-  font-size: 14px;
-  line-height: 20px;
-  letter-spacing: -0.14px;
-  color: var(--ui-content-medium);
-}
-
-.console-text-btn {
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--ui-content-on-primary);
-  font: inherit;
-  font-size: 12px;
-  line-height: 16px;
-  font-weight: 600;
-  white-space: nowrap;
-  cursor: pointer;
-}
-
-.console-text-btn:hover {
-  text-decoration: underline;
-}
-
 /* ---------- Responsive ---------- */
 @media (max-width: 1100px) {
   .dash-minis {
@@ -1728,8 +1576,7 @@ span.console-plan-btn {
     padding: 20px 20px 32px;
   }
 
-  .console-card,
-  .console-wallet {
+  .console-card {
     flex-wrap: wrap;
   }
 }

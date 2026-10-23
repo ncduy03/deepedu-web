@@ -2,82 +2,50 @@ import { useOutletContext } from 'react-router-dom';
 import { CICON } from './ConsoleLayout.jsx';
 import { PLAN_SECTIONS, PLANS } from './consoleData.js';
 
-const CREDIT_USED = 320;
-const CREDIT_TOTAL = 500;
+const POPULAR = PLANS.findIndex((p) => p.popular);
 
+/** Current plan → "Gói hiện tại"; the popular plan → white "Lựa chọn"; others → light purple "Lựa chọn". */
 function PlanButton({ plan, current, onChoose }) {
-  const index = PLANS.findIndex((p) => p.id === plan.id);
-  const currentIndex = PLANS.findIndex((p) => p.id === current.id);
-  if (index === currentIndex) {
+  if (plan.id === current.id) {
     return (
       <span className="ui-btn ui-btn--primary ui-btn--xs console-plan-btn" aria-current="true">
         Gói hiện tại
       </span>
     );
   }
-  const downgrade = index < currentIndex;
   return (
     <button
       type="button"
-      className={`ui-btn ui-btn--xs console-plan-btn ${downgrade ? 'ui-btn--tertiary' : 'ui-btn--secondary'}`}
+      className={`ui-btn ui-btn--xs console-plan-btn ${plan.popular ? 'ui-btn--tertiary' : 'ui-btn--secondary'}`}
       onClick={() => onChoose(plan.id)}
     >
-      {downgrade ? `Chuyển về ${plan.name}` : 'Nâng cấp'}
+      Lựa chọn
     </button>
   );
 }
 
-/** "Gói dịch vụ" — current plan + comparison table of the personal plans. */
+/** "Gói dịch vụ" — comparison table of the personal plans, with the popular plan outlined. */
 export default function PlansPage() {
   const { billing } = useOutletContext();
-  const { plan, setPlanId, card } = billing;
-  const col = (p) => (p.id === plan.id ? ' is-current' : '');
+  const { plan, setPlanId } = billing;
+  const col = (p) => (p.popular ? ' is-popular' : '');
 
   return (
     <div className="console-page">
       <div className="console-section__head">
-        <h2>Gói dịch vụ cá nhân</h2>
+        <h2>Tính năng &amp; quyền lợi DeepEdu</h2>
         <p className="console-section__caption">
-          So sánh hạn mức credit và tính năng giữa các gói dành cho tài khoản cá nhân.
+          So sánh chi tiết hạn mức credit và các tính năng AI cốt lõi giữa các gói DeepEdu
         </p>
-      </div>
-
-      <div className="console-current">
-        <div className="console-current__plan">
-          <p className="console-current__label">Gói hiện tại</p>
-          <p className="console-current__name">{plan.label}</p>
-        </div>
-        <div className="console-current__usage">
-          <div className="console-current__usage-label">
-            <span>Credit tháng này</span>
-            <strong>
-              {CREDIT_USED} / {CREDIT_TOTAL} credit
-            </strong>
-          </div>
-          <div
-            className="console-progress"
-            role="progressbar"
-            aria-valuemin={0}
-            aria-valuemax={CREDIT_TOTAL}
-            aria-valuenow={CREDIT_USED}
-            aria-label="Credit tháng này"
-          >
-            <span style={{ width: `${(CREDIT_USED / CREDIT_TOTAL) * 100}%` }} />
-          </div>
-        </div>
-        {plan.id !== 'free' && (
-          <div className="console-current__renew">
-            <p className="console-current__label">Gia hạn tiếp theo</p>
-            <p className="console-current__date">01/11/2026{card ? ` · Visa •••• ${card.last4}` : ''}</p>
-          </div>
-        )}
-        <button type="button" className="ui-btn ui-btn--tertiary ui-btn--sm console-current__btn" title="Sắp ra mắt">
-          Mua thêm credit
-        </button>
       </div>
 
       <div className="console-table-scroll">
         <div className="console-plans" role="table" aria-label="So sánh các gói">
+          {POPULAR >= 0 && (
+            <div className="console-plans__popular" style={{ '--col': POPULAR }} aria-hidden="true">
+              <span>Phổ biến</span>
+            </div>
+          )}
           <div className="console-plans__row console-plans__row--head" role="row">
             <div className="console-plans__cell console-plans__cell--feature" role="columnheader">
               Thông tin tính năng &amp; quyền lợi

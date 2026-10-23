@@ -2,24 +2,31 @@ import { useEffect, useState } from 'react';
 import { Link, Navigate, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { MaskIcon, Tooltip } from '../../components/ui/index.jsx';
 import { useCurrentUser } from '../../state/useCurrentUser.js';
-import { CARD, PLANS, WALLETS } from './consoleData.js';
+import { CARD, PLANS } from './consoleData.js';
 import './Console.css';
 
 export const CICON = (name) => `/assets/console/${name}.svg`;
+
+/** "Nguyễn Công Duy" → "NGUYEN CONG DUY". */
+const toCardName = (name) =>
+  name
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D')
+    .toUpperCase();
 
 const API_DOCS_URL = 'https://deep-edu-docs.sotatek.works/vi/docs/getting-started';
 
 const BILLING = [
   { to: '/tai-khoan/goi-dich-vu', label: 'Gói dịch vụ' },
-  { to: '/tai-khoan/lich-su-giao-dich', label: 'Lịch sử giao dịch' },
-  { to: '/tai-khoan/phuong-thuc-thanh-toan', label: 'Phương thức thanh toán' },
+  { to: '/tai-khoan/lich-su-thanh-toan', label: 'Lịch sử & Thanh toán' },
 ];
 
 const TITLES = {
   '/tai-khoan': 'Dashboard',
   '/tai-khoan/goi-dich-vu': 'Gói dịch vụ',
-  '/tai-khoan/lich-su-giao-dich': 'Lịch sử giao dịch',
-  '/tai-khoan/phuong-thuc-thanh-toan': 'Phương thức thanh toán',
+  '/tai-khoan/lich-su-thanh-toan': 'Lịch sử & Thanh toán',
 };
 
 function ConsoleLogo() {
@@ -121,9 +128,8 @@ export default function ConsoleLayout() {
   const { pathname } = useLocation();
   const [collapsed, setCollapsed] = useState(false);
   const [planId, setPlanId] = useState('plus');
-  const [card, setCard] = useState(CARD);
-  const [wallets, setWallets] = useState(WALLETS);
-  const [autoRenew, setAutoRenew] = useState(true);
+  // Demo card printed with the account holder's name, as on a real card ("NGUYEN CONG DUY").
+  const [card, setCard] = useState(() => ({ ...CARD, holder: user ? toCardName(user.name) : CARD.holder }));
 
   if (!user) return <Navigate to="/dang-nhap" replace />;
 
@@ -133,10 +139,6 @@ export default function ConsoleLayout() {
     card,
     setCard,
     removeCard: () => setCard(null),
-    wallets,
-    removeWallet: (id) => setWallets((ws) => ws.filter((w) => w.id !== id)),
-    autoRenew,
-    setAutoRenew,
   };
 
   return (
