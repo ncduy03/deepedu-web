@@ -7,7 +7,7 @@ import './Console.css';
 
 export const CICON = (name) => `/assets/console/${name}.svg`;
 
-const API_DOCS_URL = 'https://deep-edu-docs.sotatek.works/vi/docs/pricing';
+const API_DOCS_URL = 'https://deep-edu-docs.sotatek.works/vi/docs/getting-started';
 
 const BILLING = [
   { to: '/tai-khoan/goi-dich-vu', label: 'Gói dịch vụ' },
