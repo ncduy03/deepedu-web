@@ -100,16 +100,6 @@ function Sidebar({ user, history, activeId, onNewChat, onSelect, onCollapse, onS
                 </button>
               ))}
           </div>
-
-          {!user && (
-            <div className="guest-card">
-              <p className="guest-card__title">Lưu lại các cuộc trò chuyện</p>
-              <p className="guest-card__desc">Đăng nhập để xem lại lịch sử, tải tệp và tạo ảnh với DeepEdu.</p>
-              <Link to="/dang-nhap" className="ui-btn ui-btn--primary ui-btn--xs ui-btn--block">
-                Đăng nhập
-              </Link>
-            </div>
-          )}
         </div>
       </div>
 
@@ -138,10 +128,12 @@ function Sidebar({ user, history, activeId, onNewChat, onSelect, onCollapse, onS
           </button>
         </div>
       ) : (
-        <div className="guest-footer">
-          <p>Bạn là trường / tổ chức?</p>
-          <Link to="/dang-nhap" className="ui-link ui-link--info ui-link--xs">
-            Đăng nhập Tổ chức
+        // Guests: the sign-in card sits in the account slot at the bottom of the sidebar.
+        <div className="guest-card">
+          <p className="guest-card__title">Lưu lại các cuộc trò chuyện</p>
+          <p className="guest-card__desc">Đăng nhập để xem lại lịch sử, tải tệp và tạo ảnh với DeepEdu.</p>
+          <Link to="/dang-nhap" className="ui-btn ui-btn--primary ui-btn--xs ui-btn--block">
+            Đăng nhập
           </Link>
         </div>
       )}
