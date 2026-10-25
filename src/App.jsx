@@ -4,6 +4,7 @@ import LandingPage from './pages/LandingPage.jsx';
 import AuthLayout from './layouts/AuthLayout.jsx';
 import SignupChoice from './pages/auth/SignupChoice.jsx';
 import Login from './pages/auth/Login.jsx';
+import ConfirmAccess from './pages/auth/ConfirmAccess.jsx';
 import AssistantLayout from './pages/chat/AssistantLayout.jsx';
 import ChatPage from './pages/chat/ChatPage.jsx';
 import ProfilePage from './pages/chat/ProfilePage.jsx';
@@ -15,10 +16,11 @@ import PlansPage from './pages/console/PlansPage.jsx';
 // eslint-disable-next-line no-unused-vars -- kept for when the pricing page is shown again
 import PricingPage from './pages/console/PricingPage.jsx';
 import TransactionsPage from './pages/console/TransactionsPage.jsx';
+import OrgPage from './pages/console/OrgPage.jsx';
+import ProjectsPage from './pages/console/ProjectsPage.jsx';
+import ProjectDetailPage from './pages/console/ProjectDetailPage.jsx';
 import PersonalAccount from './pages/auth/personal/PersonalAccount.jsx';
 import PersonalVerify from './pages/auth/personal/PersonalVerify.jsx';
-import PersonalProfile from './pages/auth/personal/PersonalProfile.jsx';
-import PersonalSuccess from './pages/auth/personal/PersonalSuccess.jsx';
 import OrgInfo from './pages/auth/org/OrgInfo.jsx';
 import OrgContact from './pages/auth/org/OrgContact.jsx';
 import OrgReview from './pages/auth/org/OrgReview.jsx';
@@ -40,6 +42,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/dang-nhap" element={<Login />} />
+        <Route path="/xac-nhan-dang-nhap" element={<ConfirmAccess />} />
         <Route path="/tro-ly" element={<AssistantLayout />}>
           <Route index element={<ChatPage />} />
           <Route path="ho-so" element={<ProfilePage />} />
@@ -48,6 +51,10 @@ export default function App() {
         </Route>
         <Route path="/tai-khoan" element={<ConsoleLayout />}>
           <Route index element={<DashboardPage />} />
+          <Route path="du-an" element={<ProjectsPage />} />
+          <Route path="du-an/:projectId" element={<ProjectDetailPage tab="keys" />} />
+          <Route path="du-an/:projectId/thanh-vien" element={<ProjectDetailPage tab="members" />} />
+          <Route path="to-chuc" element={<OrgPage />} />
           <Route path="goi-dich-vu" element={<PlansPage />} />
           {/* "Gói cước chi tiết" tạm ẩn: chuyển về Gói dịch vụ. Đổi lại element={<PricingPage />} để hiện. */}
           <Route path="goi-cuoc-chi-tiet" element={<Navigate to="/tai-khoan/goi-dich-vu" replace />} />
@@ -59,11 +66,9 @@ export default function App() {
 
         <Route element={<AuthLayout />}>
           <Route path="/dang-ky" element={<SignupChoice />} />
-
+          {/* Personal sign-up by email link (no OTP). */}
           <Route path="/dang-ky/ca-nhan" element={<PersonalAccount />} />
           <Route path="/dang-ky/ca-nhan/xac-minh" element={<PersonalVerify />} />
-          <Route path="/dang-ky/ca-nhan/ho-so" element={<PersonalProfile />} />
-          <Route path="/dang-ky/ca-nhan/thanh-cong" element={<PersonalSuccess />} />
 
           <Route path="/dang-ky/to-chuc" element={<OrgInfo />} />
           <Route path="/dang-ky/to-chuc/lien-he" element={<OrgContact />} />

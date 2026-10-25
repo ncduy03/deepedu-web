@@ -253,7 +253,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 16px 32px;
+  padding: 16px 20px 16px 32px;
   border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
 
@@ -274,8 +274,32 @@
 
 .console-user__text {
   display: flex;
+  flex: 1 0 0;
   flex-direction: column;
   min-width: 0;
+}
+
+.console-user__signout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--ui-radius-xs);
+  background: none;
+  color: rgba(255, 255, 255, 0.72);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.console-user__signout:hover,
+.console-user__signout:focus-visible {
+  outline: none;
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--ui-content-on-colors);
 }
 
 .console-user__name,
@@ -294,6 +318,107 @@
 .console-user__email {
   font-size: 12px;
   line-height: 16px;
+}
+
+/* ---------- Collapsed sidebar (icon rail) ---------- */
+.console-sidebar--rail {
+  align-items: center;
+  gap: 0;
+  width: 86px;
+}
+
+.console-rail__logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 24px 0 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.console-rail__logo .console-logo__mark {
+  width: 36px;
+  height: 36px;
+}
+
+.console-rail__nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: 1 0 auto;
+  padding: 20px 0;
+}
+
+.console-rail__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--ui-radius-sm);
+  background: none;
+  color: var(--ui-content-on-colors);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.console-rail__item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.console-rail__item.is-active {
+  background: var(--ui-bg-fill-primary);
+}
+
+.console-rail__item:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.35);
+}
+
+/* Separates the sidebar actions (expand, chatbot) from the page links. */
+.console-rail__divider {
+  width: 32px;
+  height: 1px;
+  margin: 4px 0;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.console-rail__user {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  width: 100%;
+  padding: 16px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.console-rail__signout {
+  width: 44px;
+  height: 44px;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.console-rail__signout:hover {
+  color: var(--ui-content-on-colors);
+}
+
+.console-rail__avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 2px solid var(--ui-bg-surface);
+  border-radius: 1000px;
+  background: var(--ui-bg-fill-primary);
+  color: var(--ui-content-on-colors);
+  font-size: 14px;
+  font-weight: 700;
 }
 
 /* ---------- Main ---------- */
@@ -646,14 +771,221 @@
 }
 
 .dash-mini__title {
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.14px;
   font-weight: 700;
 }
 
 .dash-empty {
   padding: 32px 0;
   text-align: center;
+  font-size: 14px;
+  color: var(--ui-content-medium);
+}
+
+.dash-profile__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--ui-radius-xs);
+  background: var(--ui-display-primary-medium);
+}
+
+.dash-card__head--center {
+  align-items: center;
+}
+
+/* ---------- API key filter ---------- */
+.dash-filter {
+  position: relative;
+}
+
+.dash-filter__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--ui-border-light);
+  border-radius: var(--ui-radius-xs);
+  background: var(--ui-bg-surface);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.dash-filter__btn:hover,
+.dash-filter__btn.is-open {
+  border-color: var(--ui-border-primary);
+  background: var(--ui-display-primary-medium);
+}
+
+.dash-filter__btn:focus-visible {
+  outline: none;
+  box-shadow: var(--ui-focus-ring);
+}
+
+.dash-keypick {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 8px);
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  padding: 14px;
+  border: 1px solid var(--ui-border-light);
+  border-radius: var(--ui-radius-sm);
+  background: var(--ui-bg-surface);
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.12);
+}
+
+.dash-keypick__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  white-space: nowrap;
+}
+
+.dash .dash-keypick__title {
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.14px;
+  font-weight: 700;
+}
+
+.dash .dash-keypick__count {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--ui-content-medium);
+}
+
+.dash-keypick__list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 232px;
+  margin-right: -6px;
+  padding-right: 6px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-border-medium) transparent;
+}
+
+.dash-keypick__list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.dash-keypick__list::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  background: var(--ui-border-medium);
+}
+
+.dash-keypick__row {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--ui-radius-xs);
+  cursor: pointer;
+}
+
+.dash-keypick__row:hover:not(.is-disabled) {
+  background: var(--ui-bg-canvas);
+}
+
+.dash-keypick__row.is-selected,
+.dash-keypick__row.is-selected:hover {
+  background: var(--ui-display-primary-medium);
+}
+
+/* Limit reached: the row reads normally, only its checkbox looks unavailable. */
+.dash-keypick__row.is-disabled {
+  cursor: not-allowed;
+}
+
+.dash-keypick__row.is-disabled .dash-keypick__box {
+  background: var(--ui-bg-canvas);
+  opacity: 0.6;
+}
+
+.dash-keypick__name {
+  flex: 1 0 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.14px;
+  color: var(--ui-content-strong);
+}
+
+.dash-keypick__reqs {
+  flex-shrink: 0;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--ui-content-light);
+  white-space: nowrap;
+}
+
+.is-selected .dash-keypick__name {
+  font-weight: 700;
+  color: var(--ui-content-primary);
+}
+
+.is-selected .dash-keypick__reqs {
+  font-weight: 700;
+  color: var(--ui-content-strong);
+}
+
+.dash-keypick__row input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.dash-keypick__box {
+  position: relative;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--ui-border-medium);
+  border-radius: var(--ui-radius-2xs);
+  background: var(--ui-bg-surface);
+}
+
+.dash-keypick__box img {
+  position: absolute;
+  inset: 10%;
+  width: 80%;
+  height: 80%;
+  opacity: 0;
+}
+
+.dash-keypick__row input:checked + .dash-keypick__box {
+  border-color: var(--ui-bg-fill-primary);
+  background: var(--ui-bg-fill-primary);
+}
+
+.dash-keypick__row input:checked + .dash-keypick__box img {
+  opacity: 1;
+}
+
+.dash-keypick__row input:focus-visible + .dash-keypick__box {
+  box-shadow: var(--ui-focus-ring);
+}
+
+.dash .dash-keypick__empty {
+  padding: 12px;
   font-size: 14px;
   color: var(--ui-content-medium);
 }
@@ -780,6 +1112,11 @@
 
 .bar-chart__slot.is-hover .bar-chart__bar span {
   filter: brightness(1.08);
+}
+
+/* Hovered column: grey band over the whole column. */
+.bar-chart__slot.is-hover {
+  background: rgba(0, 0, 0, 0.06);
 }
 
 .chart-legend {
@@ -1557,6 +1894,13 @@ span.console-plan-btn {
     position: absolute;
     z-index: 5;
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  }
+
+  /* The icon rail stays in the layout instead of overlaying the page. */
+  .console-sidebar.console-sidebar--rail {
+    position: static;
+    width: 72px;
+    box-shadow: none;
   }
 
   .console-header {

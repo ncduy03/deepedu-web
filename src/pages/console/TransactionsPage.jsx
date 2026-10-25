@@ -17,7 +17,7 @@ const COLUMNS = [
 ];
 
 /** Page numbers with "…" gaps, e.g. 1 2 3 … 8 9 10. */
-function pageItems(total, current) {
+export function pageItems(total, current) {
   if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
   const keep = new Set([1, 2, 3, total - 2, total - 1, total, current - 1, current, current + 1]);
   const pages = [...keep].filter((p) => p >= 1 && p <= total).sort((a, b) => a - b);

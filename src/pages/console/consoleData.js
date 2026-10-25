@@ -11,27 +11,28 @@ export const PERIODS = [
 // Demo "today": the usage data below ends here, so the dashboard looks the same whenever it is opened.
 export const USAGE_TODAY = new Date(2026, 9, 23);
 
-const day = (req, input, output, credit) => ({ req, input, output, credit });
-const NONE = day(0, 0, 0, 0);
+// Rate used in the design: $11.84 ≈ 300.721đ.
+export const VND_PER_USD = 300721 / 11.84;
 
-// Daily usage per task type, keyed "dd/mm" (2026). Days not listed had no activity.
-// 16/10 → 23/10 matches the Figma "7 ngày" frames: 46 requests, 1.2M tokens (1.1M in / 96.4K out), 180 credit.
-const USAGE = {
-  '24/09': { chat: day(6, 118000, 9200, 16), image: NONE },
-  '26/09': { chat: day(4, 82000, 6100, 11), image: day(2, 41000, 5200, 8) },
-  '29/09': { chat: day(9, 176000, 14800, 26), image: NONE },
-  '30/09': { chat: day(3, 52000, 4000, 7), image: day(1, 22000, 2600, 4) },
-  '20/10': { chat: day(21, 449000, 31200, 60), image: NONE },
-  '21/10': { chat: day(5, 224000, 14000, 40), image: NONE },
-  '22/10': { chat: day(13, 300000, 30000, 54), image: day(7, 165000, 21200, 26) },
+/** One API key's usage on one day. `google` = the part of the tokens served by Google models (rest is OpenAI). */
+const use = (req, input, output, usd, google = { input: 0, output: 0 }) => ({ req, input, output, usd, google });
+
+// Daily usage per API key (ids from projectsData.js), keyed "dd/mm" (2026). Days not listed had no activity.
+// 16/10 → 23/10 matches the design's "7 ngày" sample: 66 requests, 6.7M tokens (6.5M in / 194.9K out),
+// $11.84 ≈ 300.721đ; 20/10 = 37 requests, 2.7M tokens, $5.9; 22/10 = key active 13 + key 7 7 requests.
+const KEY_USAGE = {
+  '24/09': { 'TWAH-1': use(6, 118000, 9200, 0.98) },
+  '26/09': { 'TWAH-1': use(4, 82000, 6100, 0.67), 'QLZ7-1': use(2, 41000, 5200, 0.49) },
+  '29/09': { 'TWAH-1': use(9, 176000, 14800, 1.55) },
+  '30/09': { 'QLZ7-1': use(4, 74000, 6600, 0.71) },
+  '20/10': { 'LX4T-ac': use(37, 2661400, 78600, 5.9) },
+  '21/10': { 'LX4T-ac': use(9, 1225800, 41200, 2.48, { input: 105100, output: 3000 }) },
+  '22/10': { 'LX4T-ac': use(13, 1454900, 38100, 1.4), 'LX4T-7': use(7, 1163000, 37000, 2.06) },
 };
-
-// Share of tokens served by Google models (the rest is OpenAI).
-export const GOOGLE_SHARE = 0.03;
 
 const pad = (n) => String(n).padStart(2, '0');
 
-/** Daily usage rows for a period, oldest first, with zero rows for quiet days. */
+/** Daily rows for a period, oldest first: { label: "20/10", keys: { [keyId]: usage } }; quiet days have no keys. */
 export function usageFor(periodId) {
   const period = PERIODS.find((p) => p.id === periodId);
   const count = period.days ?? USAGE_TODAY.getDate(); // "Tháng này" = 1st of the month → today
@@ -39,8 +40,7 @@ export function usageFor(periodId) {
     const d = new Date(USAGE_TODAY);
     d.setDate(d.getDate() - (count - 1 - i));
     const key = `${pad(d.getDate())}/${pad(d.getMonth() + 1)}`;
-    const u = USAGE[key] || { chat: NONE, image: NONE };
-    return { label: `${d.getDate()}/${d.getMonth() + 1}`, ...u };
+    return { label: `${d.getDate()}/${d.getMonth() + 1}`, keys: KEY_USAGE[key] || {} };
   });
 }
 

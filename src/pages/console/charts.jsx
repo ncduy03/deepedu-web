@@ -126,9 +126,10 @@ function useHoverIndex(count, spread) {
 
 /**
  * Smooth line/area chart over days. Series: { id, label, color, values, dashed?, fill? }.
+ * Lines are drawn after the grid, so a series that stays at 0 still shows on the x axis.
  * `tooltip(i)` returns the tooltip props for day i.
  */
-export function AreaChart({ labels, series, tooltip, height = 190 }) {
+export function AreaChart({ labels, series, tooltip, height = 190, yFormat = formatCompact }) {
   const n = labels.length;
   const { max, ticks } = niceScale(Math.max(0, ...series.flatMap((s) => s.values)));
   const W = 1000;
@@ -145,7 +146,7 @@ export function AreaChart({ labels, series, tooltip, height = 190 }) {
       <div className="chart-y" style={{ height }}>
         {ticks.map((t) => (
           <span key={t} style={{ top: `${yPct(t)}%` }}>
-            {formatCompact(t)}
+            {yFormat(t)}
           </span>
         ))}
       </div>
@@ -166,7 +167,7 @@ export function AreaChart({ labels, series, tooltip, height = 190 }) {
                     d={d}
                     fill="none"
                     stroke={s.color}
-                    strokeWidth="2"
+                    strokeWidth="2.5"
                     strokeDasharray={s.dashed ? '4 3' : undefined}
                     vectorEffect="non-scaling-stroke"
                   />
@@ -211,20 +212,23 @@ export function AreaChart({ labels, series, tooltip, height = 190 }) {
 
 /**
  * Vertical bar chart. `bars`: { label, color, stacks: [{ id, color, value }] } — one stack = plain bar.
- * `compact` is the small chart used in the task-type cards.
+ * `compact` is the small chart used in the API key cards; `yWidth` widens the y-axis column for long labels.
  */
-export function BarChart({ bars, tooltip, height, compact }) {
+export function BarChart({ bars, tooltip, height, compact, yFormat = formatCompact, yWidth }) {
   const totals = bars.map((b) => b.stacks.reduce((a, s) => a + s.value, 0));
   const { max, ticks } = niceScale(Math.max(0, ...totals));
   const { index, onMove, onLeave } = useHoverIndex(bars.length, false);
   const slot = 100 / bars.length;
 
   return (
-    <div className={`bar-chart${compact ? ' bar-chart--compact' : ''}`}>
+    <div
+      className={`bar-chart${compact ? ' bar-chart--compact' : ''}`}
+      style={yWidth ? { gridTemplateColumns: `${yWidth}px minmax(0, 1fr)` } : undefined}
+    >
       <div className="chart-y" style={{ height }}>
         {ticks.map((t) => (
           <span key={t} style={{ top: `${(1 - t / max) * 100}%` }}>
-            {formatCompact(t)}
+            {yFormat(t)}
           </span>
         ))}
       </div>

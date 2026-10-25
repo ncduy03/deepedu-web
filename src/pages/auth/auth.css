@@ -92,15 +92,6 @@
   line-height: 18px;
 }
 
-.form-success {
-  padding: 10px 12px;
-  border-radius: var(--ui-radius-xs);
-  background: #e9f7ee;
-  font-size: 13px;
-  line-height: 18px;
-  color: var(--ui-content-positive);
-}
-
 /* ---------- Page wrappers ---------- */
 .login-page {
   display: flex;
@@ -811,6 +802,174 @@
 
   .org-card__actions {
     flex-direction: column-reverse;
+    align-items: stretch;
+  }
+}
+
+/* ---------- Sign-up: "Kiểm tra email của bạn" (email link, no OTP) ---------- */
+.check-email {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  width: 512px;
+  max-width: 100%;
+}
+
+.back-link--sm {
+  gap: 6px;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0;
+  font-weight: 600;
+}
+
+.check-email__card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  padding: 32px;
+  border: 1px solid var(--ui-border-light);
+  border-radius: 16px;
+  background: var(--ui-bg-surface);
+}
+
+.check-email__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.icon-box--positive {
+  border-radius: var(--ui-radius-sm);
+  background: rgba(0, 170, 11, 0.09);
+}
+
+.check-email__title {
+  margin: 0;
+  font-size: 20px;
+  line-height: 28px;
+  letter-spacing: -0.4px;
+  font-weight: 700;
+}
+
+.check-email__text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  letter-spacing: -0.14px;
+  color: var(--ui-content-medium);
+}
+
+.check-email__text b {
+  color: var(--ui-content-strong);
+  word-break: break-all;
+}
+
+.check-email__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Counting down: primary look at 60% opacity, as in Figma. */
+.check-email__resend.ui-btn--primary:disabled {
+  background: var(--ui-bg-fill-primary);
+  opacity: 0.6;
+}
+
+.check-email__demo {
+  align-self: center;
+  margin-top: 0;
+}
+
+@media (max-width: 520px) {
+  .check-email__card {
+    padding: 24px 20px;
+  }
+}
+
+/* Inside the sign-up shell (header + footer) the card is not a full-height page. */
+.auth-main .login-page {
+  flex: 1 0 auto;
+  width: 100%;
+  min-height: 0;
+  padding: 64px 16px 80px;
+}
+
+/* ---------- "Xác nhận truy cập DeepEdu" (after opening the email link) ---------- */
+.confirm-access {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: 720px;
+  max-width: 100%;
+  padding: 40px;
+  border: 1px solid var(--ui-border-light);
+  border-radius: 16px;
+  background: var(--ui-bg-surface);
+}
+
+.confirm-access__heading {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.confirm-access__heading p {
+  margin: 0;
+}
+
+.confirm-access__info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0;
+  padding: 20px 24px;
+  border: 1px solid var(--ui-border-light);
+  border-radius: var(--ui-radius-sm);
+  background: var(--ui-bg-canvas);
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: -0.16px;
+}
+
+.confirm-access__info dt {
+  color: var(--ui-content-medium);
+}
+
+.confirm-access__info dd {
+  margin: 0;
+  min-width: 0;
+  font-family: 'Roboto Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ui-content-strong);
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+
+.confirm-access__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.confirm-access__footer p {
+  max-width: 400px;
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .confirm-access {
+    padding: 28px 20px;
+  }
+
+  .confirm-access__footer {
+    flex-direction: column;
     align-items: stretch;
   }
 }

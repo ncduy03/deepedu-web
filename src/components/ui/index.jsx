@@ -97,27 +97,6 @@ export function Checkbox({ checked, onChange, children, className = '' }) {
   );
 }
 
-/** Compact 3-step indicator of the personal sign-up flow. `current` is 1-based. */
-export function MiniStepper({ steps, current }) {
-  return (
-    <ol className="mini-stepper">
-      {steps.map((label, i) => {
-        const n = i + 1;
-        const state = n < current ? 'done' : n === current ? 'active' : 'todo';
-        return (
-          <li key={label} className={`mini-stepper__item is-${state}`}>
-            {i > 0 && <span className={`mini-stepper__line${n <= current ? ' is-done' : ''}`} />}
-            <span className="mini-stepper__dot">
-              {state === 'done' ? <img src="/assets/auth/ic-checkmark-white.svg" alt="" width="12" height="12" /> : n}
-            </span>
-            <span className="mini-stepper__label">{label}</span>
-          </li>
-        );
-      })}
-    </ol>
-  );
-}
-
 /** 6-cell OTP input with auto-advance, backspace and paste support. */
 export function OtpInput({ value, onChange, length = 6 }) {
   const refs = useRef([]);

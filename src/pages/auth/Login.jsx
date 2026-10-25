@@ -1,25 +1,16 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthCard, Separator, TextField } from '../../components/ui/index.jsx';
-import { isValidEmail, useSignup } from '../../state/SignupContext.jsx';
+import { isValidEmail } from '../../state/SignupContext.jsx';
+import CheckEmailCard from './CheckEmailCard.jsx';
 import './auth.css';
 
+/** "Đăng nhập Client Portal" — email link sign-in. After sending, shows "Kiểm tra email của bạn". */
 export default function Login() {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [sentTo, setSentTo] = useState('');
-  const { personal, updatePersonal, resetPersonal } = useSignup();
   const navigate = useNavigate();
-
-  const demoSignIn = () => {
-    // Same email as the account already in this browser: keep its profile; otherwise start a fresh one.
-    if (personal.email === sentTo) updatePersonal({ registered: true });
-    else {
-      resetPersonal();
-      updatePersonal({ email: sentTo, registered: true });
-    }
-    navigate('/tro-ly');
-  };
 
   const submit = (e) => {
     e.preventDefault();
@@ -30,6 +21,17 @@ export default function Login() {
     setError('');
     setSentTo(email.trim());
   };
+
+  if (sentTo) {
+    return (
+      <CheckEmailCard
+        email={sentTo}
+        resendLabel="Gửi lại email đăng nhập"
+        onChangeEmail={() => setSentTo('')}
+        onDemoOpen={() => navigate('/xac-nhan-dang-nhap', { state: { email: sentTo } })}
+      />
+    );
+  }
 
   return (
     <div className="login-page">
@@ -53,18 +55,8 @@ export default function Login() {
             onChange={(e) => setEmail(e.target.value)}
             error={error}
             autoComplete="email"
+            autoFocus
           />
-          {sentTo && (
-            <div className="form-success">
-              <p>
-                Đã gửi liên kết đăng nhập đến <b>{sentTo}</b>. Hãy kiểm tra hộp thư của bạn.
-              </p>
-              {/* Demo only: no email is actually sent, so let the user "open" the link here. */}
-              <button type="button" className="ui-link demo-login-link" onClick={demoSignIn}>
-                Mở liên kết đăng nhập (demo) →
-              </button>
-            </div>
-          )}
           <button type="submit" className="ui-btn ui-btn--primary ui-btn--block">
             Gửi liên kết đăng nhập
           </button>

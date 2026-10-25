@@ -1,26 +1,36 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { MaskIcon } from '../../components/ui/index.jsx';
 import { CICON } from './ConsoleLayout.jsx';
 import { AreaChart, BarChart, formatCompact, Legend } from './charts.jsx';
-import { GOOGLE_SHARE, PERIODS, usageFor } from './consoleData.js';
+import { PERIODS, usageFor, VND_PER_USD } from './consoleData.js';
 
+// Chart colours are fixed hex values (the design system has no chart tokens yet).
 const C = {
   total: '#f59e0b',
-  input: '#8261f1',
-  output: '#a78bfa',
-  credit: '#10b981',
-  chat: '#10b981',
-  image: '#3b82f6',
+  output: '#8261f1',
+  input: '#a78bfa',
+  cost: '#10b981',
+  fill: 'rgba(130, 97, 241, 0.1)',
+  costFill: 'rgba(16, 185, 129, 0.1)',
 };
-const ACCOUNT_ID = 'DEEPEDU-U-2026-1043';
-// Estimated API cost, at the rate used in Figma: 180 credit ≈ $11.84 ≈ 300.721đ.
-const USD_PER_CREDIT = 11.84 / 180;
-const VND_PER_USD = 300721 / 11.84;
+// One colour per selected API key, in selection order.
+const KEY_COLORS = ['#10b981', '#3b82f6', '#f59e0b'];
+const MAX_KEYS = 3;
 
-const sum = (days, task, key) => days.reduce((a, d) => a + d[task][key], 0);
-const both = (d, key) => d.chat[key] + d.image[key];
-const tokens = (d) => both(d, 'input') + both(d, 'output');
+const ACCOUNT_ID = 'DEEPEDU-U-2026-1043';
+const DESCRIPTION = 'Theo dõi, giám sát chi phí thực tế và hạn mức thông minh trên hệ thống API Gateway chuyên dụng DeepEdu.';
+
+/** Sum of one field over every key used on a day (or over the given key ids only). */
+const dayTotal = (day, field, ids) =>
+  Object.entries(day.keys).reduce((a, [id, u]) => (ids && !ids.includes(id) ? a : a + u[field]), 0);
+const dayTokens = (day, ids) => dayTotal(day, 'input', ids) + dayTotal(day, 'output', ids);
+const periodTotal = (days, fn) => days.reduce((a, d) => a + fn(d), 0);
+
+const usd = (v) => `$${Number(v.toFixed(2))}`;
+const vnd = (v) => `${Math.round(v).toLocaleString('vi-VN')}đ`;
+/** Axis labels of the mini charts: "850.0K", "1.7M", "0". */
+const axis = (v) => (v >= 1e6 ? `${(v / 1e6).toFixed(1)}M` : v >= 1e3 ? `${(v / 1e3).toFixed(1)}K` : String(v));
 
 function CardTitle({ icon, children }) {
   return (
@@ -31,60 +41,91 @@ function CardTitle({ icon, children }) {
   );
 }
 
-/** "Thống kê sử dụng theo thời gian" with Token / Request / Credit views. */
+/** Organization or personal account card at the top of the page. */
+function AccountCard({ account, user, plan }) {
+  const org = account?.type === 'org';
+  return (
+    <section className="dash-profile">
+      <div className="dash-profile__title">
+        {org ? (
+          <span className="dash-profile__icon">
+            <img src={CICON('ic-building')} alt="" width="18" height="18" />
+          </span>
+        ) : (
+          <span className="dash-profile__avatar">{user.initial}</span>
+        )}
+        <h2>{org ? account.name : user.name}</h2>
+        <span className="dash-badge dash-badge--primary">{org ? 'DeepEdu' : 'Cá nhân'}</span>
+        {org ? (
+          <span className="dash-badge dash-badge--positive">● Đang hoạt động</span>
+        ) : (
+          <span className={`dash-badge ${plan.id !== 'free' ? 'dash-badge--positive' : 'dash-badge--neutral'}`}>
+            ● Gói {plan.name}
+          </span>
+        )}
+      </div>
+      <p className="dash-profile__desc">
+        {DESCRIPTION}
+        {'  •  '}
+        {org ? 'Mã tổ chức' : 'Mã tài khoản'}: <strong>{org ? account.code : ACCOUNT_ID}</strong>
+      </p>
+    </section>
+  );
+}
+
+/** "Thống kê sử dụng API theo thời gian" with Token / Request / Chi phí views. */
 function UsageOverTime({ days }) {
   const [view, setView] = useState('token');
   const labels = days.map((d) => d.label);
   const views = {
     token: {
       series: [
-        { id: 'input', label: 'Đầu vào (Input)', color: C.input, dashed: true, fill: 'rgba(130, 97, 241, 0.1)', values: days.map((d) => both(d, 'input')) },
-        { id: 'output', label: 'Đầu ra (Output)', color: C.output, dashed: true, values: days.map((d) => both(d, 'output')) },
-        { id: 'total', label: 'Tổng cộng', color: C.total, values: days.map(tokens) },
+        { id: 'total', label: 'Tổng cộng', color: C.total, fill: C.fill, values: days.map((d) => dayTokens(d)) },
+        { id: 'output', label: 'Đầu ra (Output)', color: C.output, dashed: true, values: days.map((d) => dayTotal(d, 'output')) },
+        { id: 'input', label: 'Đầu vào (Input)', color: C.input, dashed: true, values: days.map((d) => dayTotal(d, 'input')) },
       ],
-      legend: ['total', 'output', 'input'],
       tooltip: (i) => ({
         title: labels[i],
         colored: true,
         rows: [
-          { label: 'Tổng cộng', color: C.total, value: `${formatCompact(tokens(days[i]))} Tokens` },
-          { label: 'Đầu ra (Output)', color: C.output, value: `${formatCompact(both(days[i], 'output'))} Tokens` },
-          { label: 'Đầu vào (Input)', color: C.input, value: `${formatCompact(both(days[i], 'input'))} Tokens` },
+          { label: 'Tổng cộng', color: C.total, value: `${formatCompact(dayTokens(days[i]))} Tokens` },
+          { label: 'Đầu ra (Output)', color: C.output, value: `${formatCompact(dayTotal(days[i], 'output'))} Tokens` },
+          { label: 'Đầu vào (Input)', color: C.input, value: `${formatCompact(dayTotal(days[i], 'input'))} Tokens` },
         ],
       }),
     },
     request: {
-      series: [{ id: 'req', label: 'Số câu hỏi', color: C.input, fill: 'rgba(130, 97, 241, 0.1)', values: days.map((d) => both(d, 'req')) }],
+      series: [{ id: 'req', label: 'Số Requests', color: C.output, fill: C.fill, values: days.map((d) => dayTotal(d, 'req')) }],
       tooltip: (i) => ({
         title: labels[i],
         colored: true,
-        rows: [{ label: 'Số câu hỏi', color: C.input, value: both(days[i], 'req') }],
+        rows: [{ label: 'Số Requests', color: C.output, value: dayTotal(days[i], 'req') }],
       }),
     },
-    credit: {
-      series: [{ id: 'credit', label: 'Credit sử dụng', color: C.credit, fill: 'rgba(16, 185, 129, 0.1)', values: days.map((d) => both(d, 'credit')) }],
+    cost: {
+      series: [{ id: 'cost', label: 'Chi phí ($)', color: C.cost, fill: C.costFill, values: days.map((d) => dayTotal(d, 'usd')) }],
+      yFormat: usd,
       tooltip: (i) => ({
         title: labels[i],
         colored: true,
-        rows: [{ label: 'Credit sử dụng', color: C.credit, value: `${both(days[i], 'credit')} credit` }],
+        rows: [{ label: 'Chi phí ($)', color: C.cost, value: usd(dayTotal(days[i], 'usd')) }],
       }),
     },
   };
   const current = views[view];
-  const legendOrder = current.legend || current.series.map((s) => s.id);
 
   return (
     <section className="dash-card">
       <div className="dash-card__head">
         <div>
-          <CardTitle icon="ic-trend">Thống kê sử dụng theo thời gian</CardTitle>
-          <p className="dash-card__desc">Lượng Token, số câu hỏi và credit bạn đã dùng theo từng ngày</p>
+          <CardTitle icon="ic-trend">Thống kê sử dụng API theo thời gian</CardTitle>
+          <p className="dash-card__desc">Biểu diễn số lượng Token và số lượng Request đã sử dụng qua hệ thống</p>
         </div>
         <div className="console-segment" role="tablist" aria-label="Chỉ số">
           {[
             ['token', 'Token'],
             ['request', 'Request'],
-            ['credit', 'Credit'],
+            ['cost', 'Chi phí'],
           ].map(([id, label]) => (
             <button
               key={id}
@@ -100,20 +141,23 @@ function UsageOverTime({ days }) {
         </div>
       </div>
       <hr className="dash-card__rule" />
-      <AreaChart labels={labels} series={current.series} tooltip={current.tooltip} />
-      <Legend items={legendOrder.map((id) => current.series.find((s) => s.id === id))} />
+      <AreaChart labels={labels} series={current.series} tooltip={current.tooltip} yFormat={current.yFormat} />
+      <Legend items={current.series} />
     </section>
   );
 }
 
 /** "Thống kê số lượng Token theo Mô hình" — OpenAI vs Google. */
 function TokensByModel({ days }) {
-  const input = days.reduce((a, d) => a + both(d, 'input'), 0);
-  const output = days.reduce((a, d) => a + both(d, 'output'), 0);
+  const google = {
+    input: periodTotal(days, (d) => Object.values(d.keys).reduce((a, u) => a + u.google.input, 0)),
+    output: periodTotal(days, (d) => Object.values(d.keys).reduce((a, u) => a + u.google.output, 0)),
+  };
+  const all = { input: periodTotal(days, (d) => dayTotal(d, 'input')), output: periodTotal(days, (d) => dayTotal(d, 'output')) };
   const models = [
-    { label: 'openai', color: C.input, share: 1 - GOOGLE_SHARE },
-    { label: 'google', color: C.output, share: GOOGLE_SHARE },
-  ].map((m) => ({ ...m, input: input * m.share, output: output * m.share }));
+    { label: 'openai', input: all.input - google.input, output: all.output - google.output },
+    { label: 'google', ...google },
+  ];
 
   return (
     <section className="dash-card">
@@ -121,12 +165,14 @@ function TokensByModel({ days }) {
       <hr className="dash-card__rule" />
       <BarChart
         height={146}
-        bars={models.map((m) => ({ label: m.label, stacks: [{ id: m.label, color: m.color, value: m.input + m.output }] }))}
+        yFormat={axis}
+        bars={models.map((m) => ({ label: m.label, stacks: [{ id: m.label, color: C.output, value: m.input + m.output }] }))}
         tooltip={(i) => ({
           title: models[i].label,
+          titleDivider: true,
           rows: [
-            { label: 'Input Tokens (Prompt)', color: C.input, value: `${formatCompact(models[i].input)} Tokens` },
-            { label: 'Output Tokens (Completion)', color: C.output, value: `${formatCompact(models[i].output)} Tokens` },
+            { label: 'Input Tokens (Prompt)', color: C.output, value: `${formatCompact(models[i].input)} Tokens` },
+            { label: 'Output Tokens (Completion)', color: C.input, value: `${formatCompact(models[i].output)} Tokens` },
           ],
           total: { label: 'Tổng số Token (Total)', value: `${formatCompact(models[i].input + models[i].output)} Tokens` },
         })}
@@ -135,20 +181,107 @@ function TokensByModel({ days }) {
   );
 }
 
-/** "Sử dụng theo loại tác vụ" — requests, tokens and credit per day, split chat / image. */
-function UsageByTask({ days }) {
-  const active = days.filter((d) => both(d, 'req') > 0);
+/** "Chọn API Key (Tối đa 3)" popover under the filter button. */
+function KeyPicker({ keys, selected, onToggle, onClose, anchor }) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const onDown = (e) => !ref.current?.contains(e.target) && !anchor.current?.contains(e.target) && onClose();
+    const onKey = (e) => e.key === 'Escape' && onClose();
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDown);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [onClose, anchor]);
+
+  const full = selected.length >= MAX_KEYS;
+
+  return (
+    <div className="dash-keypick" ref={ref} role="dialog" aria-label="Chọn API Key">
+      <div className="dash-keypick__head">
+        <p className="dash-keypick__title">Chọn API Key (Tối đa {MAX_KEYS})</p>
+        <p className="dash-keypick__count">
+          Đã chọn {selected.length}/{MAX_KEYS}
+        </p>
+      </div>
+      <hr className="dash-card__rule" />
+      <div className="dash-keypick__list">
+        {keys.map((k) => {
+          const on = selected.includes(k.id);
+          const disabled = !on && full;
+          return (
+            <label
+              key={k.id}
+              className={`dash-keypick__row${on ? ' is-selected' : ''}${disabled ? ' is-disabled' : ''}`}
+              title={disabled ? `Chỉ chọn tối đa ${MAX_KEYS} API Key` : undefined}
+            >
+              <span className="dash-keypick__name">{k.name}</span>
+              <span className="dash-keypick__reqs">{k.reqs} reqs</span>
+              <input type="checkbox" checked={on} disabled={disabled} onChange={() => onToggle(k.id)} />
+              <span className="dash-keypick__box" aria-hidden="true">
+                <img src="/assets/auth/ic-checkbox-check.svg" alt="" />
+              </span>
+            </label>
+          );
+        })}
+        {!keys.length && <p className="dash-keypick__empty">Chưa có API Key nào.</p>}
+      </div>
+    </div>
+  );
+}
+
+/** "Phân tích hiệu năng & Chi phí theo API Key" — requests, tokens and cost per day, stacked by selected key. */
+function KeyAnalysis({ days, keys, selected, onToggle }) {
+  const [open, setOpen] = useState(false);
+  const filterBtn = useRef(null);
+  const chosen = selected
+    .map((id, i) => ({ id, color: KEY_COLORS[i], name: keys.find((k) => k.id === id)?.name || id }))
+    .filter((k) => keys.some((x) => x.id === k.id));
+  const ids = chosen.map((k) => k.id);
+  const active = days.filter((d) => dayTotal(d, 'req', ids) > 0);
+
   const charts = [
-    { title: 'Số câu hỏi (Requests)', value: (t) => t.req, total: 'Tổng requests', fmt: String },
-    { title: 'Lượng Token Tiêu Thụ', value: (t) => t.input + t.output, total: 'Tổng Token', fmt: formatCompact },
-    { title: 'Credit tiêu thụ', value: (t) => t.credit, total: 'Tổng credit', fmt: String },
+    { title: 'Số lượng Request (Lượt gọi)', value: (u) => u.req, total: 'Tổng requests', fmt: String, axis: String },
+    { title: 'Lượng Token Tiêu Thụ', value: (u) => u.input + u.output, total: 'Tổng Token', fmt: formatCompact, axis },
+    {
+      title: 'Chi Phí Tiêu Thụ (Ước Tính)',
+      value: (u) => u.usd * VND_PER_USD,
+      total: 'Tổng chi phí',
+      fmt: (v) => `${formatCompact(v)} VND`,
+      axis: (v) => `${axis(v)} VND`,
+      yWidth: 76,
+    },
   ];
+  const val = (day, key, c) => (day.keys[key.id] ? c.value(day.keys[key.id]) : 0);
 
   return (
     <section className="dash-card">
-      <CardTitle icon="ic-key">Sử dụng theo loại tác vụ</CardTitle>
+      <div className="dash-card__head dash-card__head--center">
+        <CardTitle icon="ic-key">Phân tích hiệu năng &amp; Chi phí theo API Key</CardTitle>
+        <div className="dash-filter">
+          <button
+            ref={filterBtn}
+            type="button"
+            className={`dash-filter__btn${open ? ' is-open' : ''}`}
+            onClick={() => setOpen((o) => !o)}
+            aria-expanded={open}
+            aria-haspopup="dialog"
+            aria-label="Chọn API Key"
+            title="Chọn API Key"
+          >
+            <img src={CICON('ic-filter')} alt="" width="16" height="16" />
+          </button>
+          {open && (
+            <KeyPicker keys={keys} selected={selected} onToggle={onToggle} onClose={() => setOpen(false)} anchor={filterBtn} />
+          )}
+        </div>
+      </div>
       <hr className="dash-card__rule" />
-      {active.length ? (
+      {!chosen.length ? (
+        <p className="dash-empty">Chọn ít nhất 1 API Key để xem phân tích.</p>
+      ) : active.length ? (
         <div className="dash-minis">
           {charts.map((c) => (
             <div key={c.title} className="dash-mini">
@@ -156,80 +289,73 @@ function UsageByTask({ days }) {
               <BarChart
                 compact
                 height={120}
+                yFormat={c.axis}
+                yWidth={c.yWidth}
                 bars={active.map((d) => ({
                   label: d.label,
-                  stacks: [
-                    { id: 'chat', color: C.chat, value: c.value(d.chat) },
-                    { id: 'image', color: C.image, value: c.value(d.image) },
-                  ],
+                  stacks: chosen.map((k) => ({ id: k.id, color: k.color, value: val(d, k, c) })),
                 }))}
-                tooltip={(i) => ({
-                  title: active[i].label,
-                  titleDivider: true,
-                  rows: [
-                    { label: 'Trò chuyện', color: C.chat, value: c.fmt(c.value(active[i].chat)) },
-                    { label: 'Tạo ảnh', color: C.image, value: c.fmt(c.value(active[i].image)) },
-                  ],
-                  total: { label: c.total, value: c.fmt(c.value(active[i].chat) + c.value(active[i].image)) },
-                })}
+                tooltip={(i) => {
+                  const rows = chosen
+                    .map((k) => ({ label: k.name, color: k.color, raw: val(active[i], k, c) }))
+                    .filter((r) => r.raw > 0);
+                  return {
+                    title: active[i].label,
+                    titleDivider: true,
+                    rows: rows.map((r) => ({ ...r, value: c.fmt(r.raw) })),
+                    total: { label: c.total, value: c.fmt(rows.reduce((a, r) => a + r.raw, 0)) },
+                  };
+                }}
               />
             </div>
           ))}
         </div>
       ) : (
-        <p className="dash-empty">Chưa có hoạt động trong khoảng thời gian này.</p>
+        <p className="dash-empty">Các API Key đã chọn chưa có hoạt động trong khoảng thời gian này.</p>
       )}
-      <Legend
-        items={[
-          { label: 'Trò chuyện', color: C.chat },
-          { label: 'Tạo ảnh', color: C.image },
-        ]}
-      />
     </section>
   );
 }
 
-/** "Dashboard" — usage and credit overview of the personal account. */
+/** API keys of all projects with their requests in the period, most used first. */
+function keysWithRequests(projects, days) {
+  const list = projects.list.flatMap((p) => p.keys.map((k) => ({ id: k.id, name: k.name })));
+  return list
+    .map((k) => ({ ...k, reqs: periodTotal(days, (d) => d.keys[k.id]?.req || 0) }))
+    .sort((a, b) => b.reqs - a.reqs);
+}
+
+/** "Dashboard" — usage and cost overview. Same layout for organization and personal accounts. */
 export default function DashboardPage() {
-  const { user, billing } = useOutletContext();
+  const { user, billing, projects, account } = useOutletContext();
   const [period, setPeriod] = useState('7d');
   const days = useMemo(() => usageFor(period), [period]);
+  const keys = useMemo(() => keysWithRequests(projects, days), [projects, days]);
+  // Default: the 3 keys with the most requests in the default period.
+  const [selected, setSelected] = useState(() => keys.slice(0, MAX_KEYS).map((k) => k.id));
 
-  const req = sum(days, 'chat', 'req') + sum(days, 'image', 'req');
-  const input = sum(days, 'chat', 'input') + sum(days, 'image', 'input');
-  const output = sum(days, 'chat', 'output') + sum(days, 'image', 'output');
-  const credit = sum(days, 'chat', 'credit') + sum(days, 'image', 'credit');
-  const paid = billing.plan.id !== 'free';
-  const usd = credit * USD_PER_CREDIT;
-  const vnd = Math.round(usd * VND_PER_USD);
+  const toggleKey = (id) =>
+    setSelected((s) => (s.includes(id) ? s.filter((x) => x !== id) : s.length < MAX_KEYS ? [...s, id] : s));
+
+  const req = periodTotal(days, (d) => dayTotal(d, 'req'));
+  const input = periodTotal(days, (d) => dayTotal(d, 'input'));
+  const output = periodTotal(days, (d) => dayTotal(d, 'output'));
+  const cost = periodTotal(days, (d) => dayTotal(d, 'usd'));
 
   const kpis = [
     { icon: 'kpi-cpu', label: 'Tổng số Requests', value: req, note: 'Tổng số lượng requests được gửi đến hệ thống' },
-    { icon: 'kpi-coins', label: 'Tổng lượng Tokens', value: formatCompact(input + output), note: `Input: ${formatCompact(input)}  •  Output: ${formatCompact(output)}` },
     {
-      icon: 'kpi-dollar',
-      label: 'Tổng chi phí ước tính',
-      value: `${vnd.toLocaleString('vi-VN')}đ`,
-      note: `Ước tính tiêu thụ API ($${usd.toFixed(2)})`,
+      icon: 'kpi-coins',
+      label: 'Tổng lượng Tokens',
+      value: formatCompact(input + output),
+      note: `Input: ${formatCompact(input)}  •  Output: ${formatCompact(output)}`,
     },
+    { icon: 'kpi-dollar', label: 'Tổng chi phí ước tính', value: vnd(cost * VND_PER_USD), note: `Ước tính tiêu thụ API ($${cost.toFixed(2)})` },
   ];
 
   return (
     <div className="console-page dash">
-      <section className="dash-profile">
-        <div className="dash-profile__title">
-          <span className="dash-profile__avatar">{user.initial}</span>
-          <h2>{user.name}</h2>
-          <span className="dash-badge dash-badge--primary">Cá nhân</span>
-          <span className={`dash-badge ${paid ? 'dash-badge--positive' : 'dash-badge--neutral'}`}>
-            ● Gói {billing.plan.name}
-          </span>
-        </div>
-        <p className="dash-profile__desc">
-          Theo dõi lượng sử dụng và credit của tài khoản cá nhân trên DeepEdu.{'  •  '}Mã tài khoản:{' '}
-          <strong>{ACCOUNT_ID}</strong>
-        </p>
-      </section>
+      <AccountCard account={account} user={user} plan={billing.plan} />
 
       <div className="console-tabs dash-tabs" role="tablist" aria-label="Khoảng thời gian">
         {PERIODS.map((p) => (
@@ -263,7 +389,7 @@ export default function DashboardPage() {
 
       <UsageOverTime days={days} />
       <TokensByModel days={days} />
-      <UsageByTask days={days} />
+      <KeyAnalysis days={days} keys={keys} selected={selected} onToggle={toggleKey} />
     </div>
   );
 }
