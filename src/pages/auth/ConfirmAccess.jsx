@@ -1,5 +1,6 @@
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useSignup } from '../../state/SignupContext.jsx';
+import { accountTypeFor, orgNameFor } from '../../state/accountType.js';
 import './auth.css';
 
 /**
@@ -12,6 +13,9 @@ export default function ConfirmAccess() {
   const navigate = useNavigate();
 
   if (!email) return <Navigate to="/dang-nhap" replace />;
+
+  // Company email → organization account: also show which organization is being entered.
+  const org = accountTypeFor(email) === 'org';
 
   const signIn = () => {
     // Same email as the account already in this browser: keep its profile; otherwise start a fresh one.
@@ -32,8 +36,16 @@ export default function ConfirmAccess() {
         </div>
 
         <dl className="confirm-access__info">
-          <dt>Email:</dt>
-          <dd>{email}</dd>
+          {org && (
+            <div className="confirm-access__row">
+              <dt>Tổ chức:</dt>
+              <dd className="confirm-access__org">{orgNameFor(email)}</dd>
+            </div>
+          )}
+          <div className="confirm-access__row">
+            <dt>Email:</dt>
+            <dd>{email}</dd>
+          </div>
         </dl>
 
         <div className="confirm-access__footer">

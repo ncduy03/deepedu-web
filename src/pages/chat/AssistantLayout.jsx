@@ -17,7 +17,8 @@ const PAGES = {
   '/tro-ly/gop-y': { title: 'Góp ý sản phẩm', icon: ICON('ic-menu-message'), tint: true },
 };
 
-function AccountMenu({ onClose, onSignOut }) {
+/** Account menu (avatar + name at the bottom of the sidebar). Also used by the management console. */
+export function AccountMenu({ onClose, onSignOut, className = '', signOutOnly = false }) {
   const { pathname } = useLocation();
   const ref = useRef(null);
 
@@ -46,13 +47,18 @@ function AccountMenu({ onClose, onSignOut }) {
   );
 
   return (
-    <div className="account-menu" role="menu" ref={ref}>
-      {item('/tro-ly/ho-so', 'ic-menu-user', 'Hồ sơ tài khoản')}
-      <hr className="account-menu__divider" />
-      {item('/tai-khoan/goi-dich-vu', 'ic-menu-credit-card', 'Gói cước & thanh toán')}
-      <hr className="account-menu__divider" />
-      {item('/tro-ly/gop-y', 'ic-menu-message', 'Góp ý sản phẩm')}
-      <hr className="account-menu__divider" />
+    <div className={`account-menu ${className}`} role="menu" ref={ref}>
+      {/* `signOutOnly`: the management console temporarily shows just "Đăng xuất". */}
+      {!signOutOnly && (
+        <>
+          {item('/tro-ly/ho-so', 'ic-menu-user', 'Hồ sơ tài khoản')}
+          <hr className="account-menu__divider" />
+          {item('/tai-khoan/goi-dich-vu', 'ic-menu-credit-card', 'Gói cước & thanh toán')}
+          <hr className="account-menu__divider" />
+          {item('/tro-ly/gop-y', 'ic-menu-message', 'Góp ý sản phẩm')}
+          <hr className="account-menu__divider" />
+        </>
+      )}
       <button type="button" role="menuitem" className="account-menu__item account-menu__item--danger" onClick={onSignOut}>
         <img src={ICON('ic-menu-log-out')} alt="" width="18" height="18" />
         Đăng xuất
@@ -67,9 +73,10 @@ function Sidebar({ user, history, activeId, onNewChat, onSelect, onCollapse, onS
     <aside className="chat-sidebar">
       <div className="chat-sidebar__nav">
         <div className="chat-sidebar__head">
-          <Link to="/" aria-label="Trang chủ DeepEdu">
+          {/* Logo is not a link in the assistant: clicking it stays on the page. */}
+          <span className="chat-sidebar__logo" aria-label="DeepEdu" role="img">
             <Logo set="header" height={32.053} />
-          </Link>
+          </span>
           <div className="chat-sidebar__actions">
             {user && (
               <Tooltip label="Quản lý tài khoản">

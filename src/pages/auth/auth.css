@@ -923,8 +923,7 @@
 
 .confirm-access__info {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
   gap: 16px;
   margin: 0;
   padding: 20px 24px;
@@ -934,6 +933,13 @@
   font-size: 16px;
   line-height: 24px;
   letter-spacing: -0.16px;
+}
+
+.confirm-access__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
 }
 
 .confirm-access__info dt {
@@ -949,6 +955,13 @@
   color: var(--ui-content-strong);
   overflow-wrap: anywhere;
   text-align: right;
+}
+
+/* Organization name: regular font, semibold (the email keeps the monospace style). */
+.confirm-access__info dd.confirm-access__org {
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .confirm-access__footer {

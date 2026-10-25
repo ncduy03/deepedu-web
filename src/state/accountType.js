@@ -22,3 +22,8 @@ export function accountTypeFor(email) {
 
 // Demo organization shown for company emails (sample data from the "Dashboard - org" design).
 export const DEMO_ORG = { name: 'Trường THCS Ba Đình', code: 'DEEPEDU-2026-0022' };
+
+/** Organization name shown when signing in with a company email: "duy@sotatek.com" → "SOTATEK". */
+export function orgNameFor(email) {
+  return domainOf(email).split('.')[0].toUpperCase();
+}

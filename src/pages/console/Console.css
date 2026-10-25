@@ -248,13 +248,59 @@
   border-left: 2px solid var(--ui-content-on-colors);
 }
 
-/* User */
+/* User: opens the account menu (same as the assistant). */
+.console-user-wrap {
+  position: relative;
+  padding: 8px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
 .console-user {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 16px 20px 16px 32px;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  width: 100%;
+  padding: 8px 8px 8px 16px;
+  border: 0;
+  border-radius: var(--ui-radius-xs);
+  background: none;
+  color: var(--ui-content-on-colors);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.console-user:hover,
+.console-user[aria-expanded='true'] {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.console-user:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.35);
+}
+
+.console-user__chevron {
+  color: rgba(255, 255, 255, 0.72);
+  transform: rotate(180deg);
+  transition: transform 0.15s ease;
+}
+
+.console-user__chevron.is-open {
+  transform: rotate(0deg);
+}
+
+.console-user-wrap .account-menu {
+  left: 16px;
+  right: 16px;
+}
+
+/* Collapsed rail: the menu opens to the right of the avatar. */
+.account-menu.account-menu--rail {
+  left: calc(100% + 8px);
+  right: auto;
+  bottom: 12px;
+  width: 240px;
 }
 
 .console-user__avatar {
@@ -279,28 +325,6 @@
   min-width: 0;
 }
 
-.console-user__signout {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 36px;
-  height: 36px;
-  padding: 0;
-  border: 0;
-  border-radius: var(--ui-radius-xs);
-  background: none;
-  color: rgba(255, 255, 255, 0.72);
-  cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
-}
-
-.console-user__signout:hover,
-.console-user__signout:focus-visible {
-  outline: none;
-  background: rgba(255, 255, 255, 0.12);
-  color: var(--ui-content-on-colors);
-}
 
 .console-user__name,
 .console-user__email {
@@ -322,9 +346,12 @@
 
 /* ---------- Collapsed sidebar (icon rail) ---------- */
 .console-sidebar--rail {
+  position: relative;
+  z-index: 10;
   align-items: center;
   gap: 0;
   width: 86px;
+  overflow: visible; /* lets the account menu open beside the rail */
 }
 
 .console-rail__logo {
@@ -387,27 +414,18 @@
 }
 
 .console-rail__user {
+  position: relative;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
   justify-content: center;
   width: 100%;
   padding: 16px 0;
   border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-.console-rail__signout {
-  width: 44px;
-  height: 44px;
-  color: rgba(255, 255, 255, 0.72);
-}
-
-.console-rail__signout:hover {
-  color: var(--ui-content-on-colors);
-}
-
 .console-rail__avatar {
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;

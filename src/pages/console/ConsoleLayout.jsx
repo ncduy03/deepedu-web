@@ -6,6 +6,7 @@ import { useSignup } from '../../state/SignupContext.jsx';
 import { CARD, PLANS } from './consoleData.js';
 import { PICON, useProjects } from './projectsData.js';
 import { ORG_TOPUP } from './orgData.js';
+import { AccountMenu } from '../chat/AssistantLayout.jsx';
 import './Console.css';
 import './Projects.css';
 
@@ -20,7 +21,7 @@ const toCardName = (name) =>
     .replace(/Đ/g, 'D')
     .toUpperCase();
 
-const SIGN_OUT_ICON = '/assets/chat/ic-menu-log-out.svg';
+const USER_CHEVRON = '/assets/chat/ic-alt-arrow-down-user.svg';
 
 const API_DOCS_URL = 'https://deep-edu-docs.sotatek.works/vi/docs/getting-started';
 
@@ -64,6 +65,7 @@ function ConsoleLogo({ org }) {
 
 function Sidebar({ user, onCollapse, onSignOut }) {
   const { pathname } = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
   const billing = billingItems(user.type === 'org');
   const billingActive = billing.some((b) => pathname === b.to);
   const [billingOpen, setBillingOpen] = useState(billingActive);
@@ -132,14 +134,21 @@ function Sidebar({ user, onCollapse, onSignOut }) {
         </a>
       </nav>
 
-      <div className="console-user">
-        <span className="console-user__avatar">{user.initial}</span>
-        <span className="console-user__text">
-          <span className="console-user__name">{user.name}</span>
-          <span className="console-user__email">{user.email}</span>
-        </span>
-        <button type="button" className="console-user__signout" onClick={onSignOut} aria-label="Đăng xuất" title="Đăng xuất">
-          <MaskIcon src={SIGN_OUT_ICON} size={20} />
+      <div className="console-user-wrap">
+        {menuOpen && <AccountMenu signOutOnly onClose={() => setMenuOpen(false)} onSignOut={onSignOut} />}
+        <button
+          type="button"
+          className="console-user"
+          onClick={() => setMenuOpen((o) => !o)}
+          aria-expanded={menuOpen}
+          aria-haspopup="menu"
+        >
+          <span className="console-user__avatar">{user.initial}</span>
+          <span className="console-user__text">
+            <span className="console-user__name">{user.name}</span>
+            <span className="console-user__email">{user.email}</span>
+          </span>
+          <MaskIcon src={USER_CHEVRON} size={20} className={`console-user__chevron${menuOpen ? ' is-open' : ''}`} />
         </button>
       </div>
     </aside>
@@ -149,6 +158,7 @@ function Sidebar({ user, onCollapse, onSignOut }) {
 /** Collapsed sidebar: a narrow icon rail (logo, expand button, nav icons, avatar). */
 function SidebarRail({ user, onExpand, onSignOut }) {
   const { pathname } = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
   const billing = billingItems(user.type === 'org');
   const billingActive = billing.some((b) => pathname === b.to);
   const item = ({ isActive }) => `console-rail__item${isActive ? ' is-active' : ''}`;
@@ -202,11 +212,19 @@ function SidebarRail({ user, onExpand, onSignOut }) {
       </nav>
 
       <div className="console-rail__user">
-        <span className="console-rail__avatar" title={`${user.name} · ${user.email}`}>
+        {menuOpen && (
+          <AccountMenu signOutOnly className="account-menu--rail" onClose={() => setMenuOpen(false)} onSignOut={onSignOut} />
+        )}
+        <button
+          type="button"
+          className="console-rail__avatar"
+          onClick={() => setMenuOpen((o) => !o)}
+          aria-expanded={menuOpen}
+          aria-haspopup="menu"
+          aria-label={`Tài khoản: ${user.name}`}
+          title={`${user.name} · ${user.email}`}
+        >
           {user.initial}
-        </span>
-        <button type="button" className="console-rail__item console-rail__signout" onClick={onSignOut} aria-label="Đăng xuất" title="Đăng xuất">
-          <MaskIcon src={SIGN_OUT_ICON} size={22} />
         </button>
       </div>
     </aside>

@@ -40,7 +40,8 @@
   padding: 4px 4px 4px 8px;
 }
 
-.chat-sidebar__head a {
+.chat-sidebar__head a,
+.chat-sidebar__logo {
   display: flex;
 }
 
