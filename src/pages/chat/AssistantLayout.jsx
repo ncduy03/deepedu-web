@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../../components/Logo.jsx';
-import { MaskIcon, Tooltip } from '../../components/ui/index.jsx';
+import { MaskIcon, SwitchSiteButton } from '../../components/ui/index.jsx';
 import { useSignup } from '../../state/SignupContext.jsx';
 import { useCurrentUser } from '../../state/useCurrentUser.js';
 import { DEMO_CONVERSATIONS } from './demoConversations.js';
@@ -78,13 +78,6 @@ function Sidebar({ user, history, activeId, onNewChat, onSelect, onCollapse, onS
             <Logo set="header" height={32.053} />
           </span>
           <div className="chat-sidebar__actions">
-            {user && (
-              <Tooltip label="Quản lý tài khoản">
-                <Link to="/tai-khoan" className="chat-icon-btn" aria-label="Quản lý tài khoản">
-                  <img src={ICON('ic-credit-card-switch')} alt="" width="20" height="20" />
-                </Link>
-              </Tooltip>
-            )}
             <button type="button" className="chat-icon-btn" onClick={onCollapse} aria-label="Thu gọn thanh bên">
               <img src={ICON('ic-sidebar-collapse')} alt="" width="20" height="20" />
             </button>
@@ -119,6 +112,15 @@ function Sidebar({ user, history, activeId, onNewChat, onSelect, onCollapse, onS
         </div>
       </div>
 
+      {user && (
+        <SwitchSiteButton
+          to="/tai-khoan"
+          icon="/assets/shared/ic-switch-key.svg"
+          label="Quản lý API"
+          tone="light"
+          component={Link}
+        />
+      )}
       {user ? (
         <div className="chat-user-wrap">
           {menuOpen && <AccountMenu onClose={() => setMenuOpen(false)} onSignOut={onSignOut} />}

@@ -272,3 +272,77 @@
   border: 2px solid var(--ui-border-primary);
   box-shadow: var(--ui-focus-ring);
 }
+
+/* Switch button (assistant ⇄ console), Figma "Switch site". */
+.switch-site {
+  flex-shrink: 0;
+  padding: 4px 16px 12px;
+}
+
+.switch-site__btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  border: 1px solid;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: -0.14px;
+  text-decoration: none;
+  transition: background-color 0.15s;
+}
+
+.switch-site__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+}
+
+.switch-site__label {
+  flex: 1 0 0;
+  min-width: 0;
+}
+
+.switch-site__arrow {
+  transition: transform 0.15s;
+}
+
+.switch-site__btn:hover .switch-site__arrow {
+  transform: translateX(2px);
+}
+
+.switch-site--dark .switch-site__btn {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.switch-site--dark .switch-site__btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.switch-site--dark .switch-site__icon {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* Light sidebar (assistant): same layout, colors adapted to the light background. */
+.switch-site--light .switch-site__btn {
+  color: var(--ui-content-strong);
+  background: var(--ui-bg-surface, #fff);
+  border-color: var(--ui-border-light, rgba(0, 0, 0, 0.09));
+}
+
+.switch-site--light .switch-site__btn:hover {
+  background: var(--bg-tertiary);
+}
+
+.switch-site--light .switch-site__icon {
+  color: var(--ui-content-primary);
+  background: rgba(130, 97, 241, 0.14);
+}

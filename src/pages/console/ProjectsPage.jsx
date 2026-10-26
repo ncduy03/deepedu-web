@@ -116,13 +116,18 @@ function StatusFilter({ value, onChange }) {
 
 const KPIS = [
   { icon: 'kpi-folder', label: 'Tổng số dự án', value: (p) => p.list.length },
-  { icon: 'kpi-users', label: 'Tổng thành viên', value: (p) => p.memberCount },
+  { icon: 'kpi-users', label: 'Tổng thành viên', value: (p) => p.memberCount, orgOnly: true },
   { icon: 'kpi-coins', label: 'Tổng Tokens đã gọi', value: (p) => formatCount(p.tokenCount) },
 ];
 
-/** "Dự án" — KPIs, search + status filter, and the paginated project table. */
+/**
+ * "Dự án" — KPIs, search + status filter, and the paginated project table.
+ * Personal accounts have no members, so the member KPI and column are hidden.
+ */
 export default function ProjectsPage() {
-  const { projects, headerActions } = useOutletContext();
+  const { projects, headerActions, account } = useOutletContext();
+  const isOrg = account?.type === 'org';
+  const kpis = KPIS.filter((k) => isOrg || !k.orgOnly);
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [status, setStatus] = useState('all');
@@ -153,8 +158,8 @@ export default function ProjectsPage() {
           headerActions,
         )}
 
-      <div className="pj-kpis">
-        {KPIS.map((k) => (
+      <div className={`pj-kpis${isOrg ? '' : ' pj-kpis--2'}`}>
+        {kpis.map((k) => (
           <div key={k.label} className="pj-kpi">
             <span className="pj-kpi__icon">
               <img src={PICON(k.icon)} alt="" width="18" height="18" />
@@ -185,7 +190,7 @@ export default function ProjectsPage() {
             <tr>
               <th className="col-code">Mã dự án</th>
               <th>Tên dự án</th>
-              <th className="col-members is-center">Thành viên</th>
+              {isOrg && <th className="col-members is-center">Thành viên</th>}
               <th className="col-date">Ngày tạo</th>
               <th className="col-status">Trạng thái</th>
               <th className="col-actions is-end">Tác vụ</th>
@@ -196,7 +201,7 @@ export default function ProjectsPage() {
               <tr key={p.id}>
                 <td className="pj-table__code">{p.id}</td>
                 <td>{p.name}</td>
-                <td className="is-center">{p.members.length}</td>
+                {isOrg && <td className="is-center">{p.members.length}</td>}
                 <td>{p.created}</td>
                 <td>
                   <StatusBadge active={p.status === 'active'} label={PROJECT_STATUS[p.status]} />
@@ -211,7 +216,7 @@ export default function ProjectsPage() {
             ))}
             {!visible.length && (
               <tr>
-                <td colSpan={6} className="pj-table__empty">
+                <td colSpan={isOrg ? 6 : 5} className="pj-table__empty">
                   Không có dự án phù hợp.
                 </td>
               </tr>

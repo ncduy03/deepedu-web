@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, matchPath, Navigate, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { MaskIcon, Tooltip } from '../../components/ui/index.jsx';
+import { MaskIcon, SwitchSiteButton } from '../../components/ui/index.jsx';
 import { useCurrentUser } from '../../state/useCurrentUser.js';
 import { useSignup } from '../../state/SignupContext.jsx';
 import { CARD, PLANS } from './consoleData.js';
@@ -80,11 +80,6 @@ function Sidebar({ user, onCollapse, onSignOut }) {
       <div className="console-sidebar__top">
         <ConsoleLogo org={user.type === 'org'} />
         <div className="console-sidebar__actions">
-          <Tooltip label="Chuyển đến Trợ lý DeepEdu">
-            <Link to="/tro-ly" className="console-icon-btn" aria-label="Chuyển đến Trợ lý DeepEdu">
-              <img src={CICON('ic-chat')} alt="" width="24" height="24" />
-            </Link>
-          </Tooltip>
           <button type="button" className="console-icon-btn" onClick={onCollapse} aria-label="Thu gọn thanh bên">
             <img src={CICON('ic-layout-right')} alt="" width="24" height="24" />
           </button>
@@ -133,6 +128,8 @@ function Sidebar({ user, onCollapse, onSignOut }) {
           <span className="console-nav__label">Tài liệu API</span>
         </a>
       </nav>
+
+      <SwitchSiteButton to="/tro-ly" icon="/assets/shared/ic-switch-sparkles.svg" label="Chatbot" component={Link} />
 
       <div className="console-user-wrap">
         {menuOpen && <AccountMenu signOutOnly onClose={() => setMenuOpen(false)} onSignOut={onSignOut} />}

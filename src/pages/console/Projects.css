@@ -107,6 +107,10 @@
   gap: 16px;
 }
 
+.pj-kpis--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .pj-kpi {
   display: flex;
   flex-direction: column;

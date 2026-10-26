@@ -152,3 +152,21 @@ export function OtpInput({ value, onChange, length = 6 }) {
     </div>
   );
 }
+
+/**
+ * Card link above the account row that switches between the assistant and the management console
+ * (Figma "Switch button"). `tone="dark"` for the purple console sidebar, `"light"` for the assistant sidebar.
+ */
+export function SwitchSiteButton({ to, icon, label, tone = 'dark', component: Comp }) {
+  return (
+    <div className={`switch-site switch-site--${tone}`}>
+      <Comp to={to} className="switch-site__btn">
+        <span className="switch-site__icon">
+          <MaskIcon src={icon} size={16} />
+        </span>
+        <span className="switch-site__label">{label}</span>
+        <MaskIcon src="/assets/shared/ic-switch-arrow.svg" size={16} className="switch-site__arrow" />
+      </Comp>
+    </div>
+  );
+}

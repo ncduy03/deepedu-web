@@ -212,7 +212,7 @@ function MembersTab({ project, ownerEmail, isOrg, onAction }) {
   );
 }
 
-/** "Chi tiết dự án" — project info, header actions, and the API Key / Thành viên dự án tabs. */
+/** "Chi tiết dự án" — project info, header actions, and the API Key / Thành viên dự án (organizations only) tabs. */
 export default function ProjectDetailPage({ tab = 'keys' }) {
   const { projectId } = useParams();
   const { projects, headerActions, user, account } = useOutletContext();
@@ -220,7 +220,11 @@ export default function ProjectDetailPage({ tab = 'keys' }) {
   const [dialog, setDialog] = useState(null); // { type, item }
   const project = projects.get(projectId);
 
+  const isOrg = account?.type === 'org';
+
   if (!project) return <Navigate to="/tai-khoan/du-an" replace />;
+  // Personal accounts have no project members: the members tab redirects to API Key.
+  if (!isOrg && tab === 'members') return <Navigate to={`/tai-khoan/du-an/${project.id}`} replace />;
 
   const paused = project.status === 'paused';
   const base = `/tai-khoan/du-an/${project.id}`;
@@ -292,7 +296,10 @@ export default function ProjectDetailPage({ tab = 'keys' }) {
             }}
           >
             <p>Bạn có chắc chắn muốn xoá dự án này?</p>
-            <p>API key thuộc dự án sẽ bị thu hồi. Thành viên chỉ bị gỡ khỏi dự án, không bị xóa khỏi tổ chức.</p>
+            <p>
+              API key thuộc dự án sẽ bị thu hồi.
+              {isOrg && ' Thành viên chỉ bị gỡ khỏi dự án, không bị xóa khỏi tổ chức.'}
+            </p>
             <p>Hành động này không thể hoàn tác.</p>
           </ConfirmDialog>
         );
@@ -522,10 +529,12 @@ export default function ProjectDetailPage({ tab = 'keys' }) {
             <img src={PICON('ic-calendar-14')} alt="" width="14" height="14" />
             Ngày tạo: {project.created}
           </span>
-          <span>
-            <img src={PICON('ic-users-14')} alt="" width="14" height="14" />
-            Thành viên: {project.members.length}
-          </span>
+          {isOrg && (
+            <span>
+              <img src={PICON('ic-users-14')} alt="" width="14" height="14" />
+              Thành viên: {project.members.length}
+            </span>
+          )}
           <span>
             <img src={PICON('ic-key-14')} alt="" width="14" height="14" />
             API Key: {project.keys.length}
@@ -537,15 +546,17 @@ export default function ProjectDetailPage({ tab = 'keys' }) {
         <NavLink to={base} end className={({ isActive }) => `pj-tabs__item${isActive ? ' is-active' : ''}`}>
           API Key <span className="pj-tabs__count">{project.keys.length}</span>
         </NavLink>
-        <NavLink to={`${base}/thanh-vien`} className={({ isActive }) => `pj-tabs__item${isActive ? ' is-active' : ''}`}>
-          Thành viên dự án <span className="pj-tabs__count">{project.members.length}</span>
-        </NavLink>
+        {isOrg && (
+          <NavLink to={`${base}/thanh-vien`} className={({ isActive }) => `pj-tabs__item${isActive ? ' is-active' : ''}`}>
+            Thành viên dự án <span className="pj-tabs__count">{project.members.length}</span>
+          </NavLink>
+        )}
       </nav>
 
       {tab === 'keys' ? (
         <KeysTab project={project} paused={paused} onAction={open} />
       ) : (
-        <MembersTab project={project} ownerEmail={user.email} isOrg={account?.type === 'org'} onAction={open} />
+        <MembersTab project={project} ownerEmail={user.email} isOrg={isOrg} onAction={open} />
       )}
 
       {renderDialog()}
