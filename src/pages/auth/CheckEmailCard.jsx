@@ -8,7 +8,14 @@ const RESEND_SECONDS = 60;
  * "Kiểm tra email của bạn" — shown after a sign-up or sign-in link is sent.
  * Resend unlocks after a countdown; `onDemoOpen` stands in for clicking the link in the email.
  */
-export default function CheckEmailCard({ email, resendLabel, onChangeEmail, onDemoOpen }) {
+export default function CheckEmailCard({
+  email,
+  resendLabel,
+  action = 'đăng nhập',
+  expiry = '15 phút',
+  onChangeEmail,
+  onDemoOpen,
+}) {
   const [seconds, setSeconds] = useState(RESEND_SECONDS);
 
   useEffect(() => {
@@ -36,8 +43,8 @@ export default function CheckEmailCard({ email, resendLabel, onChangeEmail, onDe
           </div>
 
           <p className="check-email__text">
-            Hệ thống đã gửi email tới địa chỉ <b>{email}</b>. Vui lòng kiểm tra email và ấn vào đường link để đăng nhập.
-            Liên kết chỉ dùng một lần và sẽ hết hạn sau 15 phút.
+            Hệ thống đã gửi email tới địa chỉ <b>{email}</b>. Vui lòng kiểm tra email và ấn vào đường link để {action}.
+            Liên kết chỉ dùng một lần và sẽ hết hạn sau {expiry}.
           </p>
 
           <div className="check-email__actions">
