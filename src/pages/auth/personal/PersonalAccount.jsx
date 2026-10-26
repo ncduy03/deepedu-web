@@ -7,19 +7,21 @@ import '../auth.css';
 /** "Đăng ký Client Portal" — sign-up by email link (no OTP). Next: "Kiểm tra email của bạn". */
 export default function PersonalAccount() {
   const { personal, updatePersonal, resetPersonal } = useSignup();
+  const [fullName, setFullName] = useState(personal.fullName);
   const [email, setEmail] = useState(personal.email);
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
   const submit = (e) => {
     e.preventDefault();
-    if (!isValidEmail(email)) {
-      setError('Vui lòng nhập địa chỉ email hợp lệ.');
-      return;
-    }
+    const next = {};
+    if (!fullName.trim()) next.fullName = 'Vui lòng nhập họ và tên.';
+    if (!isValidEmail(email)) next.email = 'Vui lòng nhập địa chỉ email hợp lệ.';
+    setErrors(next);
+    if (Object.keys(next).length) return;
     // A different email starts a fresh demo account instead of reusing the old profile.
     if (email.trim() !== personal.email) resetPersonal();
-    updatePersonal({ email: email.trim() });
+    updatePersonal({ fullName: fullName.trim(), email: email.trim() });
     navigate('/dang-ky/ca-nhan/xac-minh');
   };
 
@@ -38,14 +40,22 @@ export default function PersonalAccount() {
 
         <div className="stack-16">
           <TextField
+            label="Họ và tên"
+            placeholder="Nhập họ và tên"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            error={errors.fullName}
+            autoComplete="name"
+            autoFocus
+          />
+          <TextField
             label="Email"
             type="email"
             placeholder="name@email.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            error={error}
+            error={errors.email}
             autoComplete="email"
-            autoFocus
           />
           <button type="submit" className="ui-btn ui-btn--primary ui-btn--block">
             Gửi liên kết đăng ký

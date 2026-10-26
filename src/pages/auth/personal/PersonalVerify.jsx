@@ -12,7 +12,7 @@ export default function PersonalVerify() {
   return (
     <CheckEmailCard
       email={personal.email}
-      resendLabel="Gửi lại email kích hoạt"
+      resendLabel="Gửi lại liên kết"
       onChangeEmail={() => navigate('/dang-ky/ca-nhan')}
       onDemoOpen={() => navigate('/xac-nhan-dang-nhap', { state: { email: personal.email } })}
     />

@@ -26,7 +26,7 @@ export default function Login() {
     return (
       <CheckEmailCard
         email={sentTo}
-        resendLabel="Gửi lại email đăng nhập"
+        resendLabel="Gửi lại liên kết"
         onChangeEmail={() => setSentTo('')}
         onDemoOpen={() => navigate('/xac-nhan-dang-nhap', { state: { email: sentTo } })}
       />
