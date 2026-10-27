@@ -42,6 +42,9 @@ function CardTitle({ icon, children }) {
 }
 
 /** Organization or personal account card at the top of the page. */
+// Account type / status badges next to the name are hidden for now; set to true to show them again.
+const SHOW_ACCOUNT_BADGES = false;
+
 function AccountCard({ account, user, plan }) {
   const org = account?.type === 'org';
   return (
@@ -55,13 +58,17 @@ function AccountCard({ account, user, plan }) {
           <span className="dash-profile__avatar">{user.initial}</span>
         )}
         <h2>{org ? account.name : user.name}</h2>
-        <span className="dash-badge dash-badge--primary">{org ? 'DeepEdu' : 'Cá nhân'}</span>
-        {org ? (
-          <span className="dash-badge dash-badge--positive">● Đang hoạt động</span>
-        ) : (
-          <span className={`dash-badge ${plan.id !== 'free' ? 'dash-badge--positive' : 'dash-badge--neutral'}`}>
-            ● Gói {plan.name}
-          </span>
+        {SHOW_ACCOUNT_BADGES && (
+          <>
+            <span className="dash-badge dash-badge--primary">{org ? 'DeepEdu' : 'Cá nhân'}</span>
+            {org ? (
+              <span className="dash-badge dash-badge--positive">● Đang hoạt động</span>
+            ) : (
+              <span className={`dash-badge ${plan.id !== 'free' ? 'dash-badge--positive' : 'dash-badge--neutral'}`}>
+                ● Gói {plan.name}
+              </span>
+            )}
+          </>
         )}
       </div>
       <p className="dash-profile__desc">
