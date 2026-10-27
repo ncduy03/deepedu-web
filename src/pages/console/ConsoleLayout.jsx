@@ -49,7 +49,7 @@ const isProjectDetail = (pathname) =>
   Boolean(matchPath('/tai-khoan/du-an/:projectId/*', pathname));
 
 /** White DeepEdu logo for the dark sidebars. Without `to` it is not a link (assistant sidebar). */
-export function SidebarLogo({ sub, to, label = 'DeepEdu' }) {
+export function SidebarLogo({ sub = 'Trợ lý AI', to, label = 'DeepEdu' }) {
   const content = (
     <>
       <span className="console-logo__mark" aria-hidden="true">
@@ -73,10 +73,6 @@ export function SidebarLogo({ sub, to, label = 'DeepEdu' }) {
   );
 }
 
-function ConsoleLogo({ org }) {
-  return <SidebarLogo to="/tai-khoan" label="Về Dashboard" sub={org ? 'Hệ thống quản trị' : 'Tài khoản cá nhân'} />;
-}
-
 function Sidebar({ user, onCollapse, onSignOut }) {
   const { pathname } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -92,7 +88,7 @@ function Sidebar({ user, onCollapse, onSignOut }) {
   return (
     <aside className="console-sidebar">
       <div className="console-sidebar__top">
-        <ConsoleLogo org={user.type === 'org'} />
+        <SidebarLogo to="/tai-khoan" label="Về Dashboard" />
         <div className="console-sidebar__actions">
           <button type="button" className="console-icon-btn" onClick={onCollapse} aria-label="Thu gọn thanh bên">
             <img src={CICON('ic-layout-right')} alt="" width="24" height="24" />

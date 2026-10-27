@@ -74,7 +74,7 @@ function Sidebar({ user, history, activeId, onNewChat, onSelect, onCollapse, onS
       <div className="chat-sidebar__nav">
         <div className="chat-sidebar__head">
           {/* Logo is not a link in the assistant: clicking it stays on the page. */}
-          <SidebarLogo sub="Trợ lý AI" />
+          <SidebarLogo />
           <div className="chat-sidebar__actions">
             <button type="button" className="console-icon-btn" onClick={onCollapse} aria-label="Thu gọn thanh bên">
               <MaskIcon src="/assets/console/ic-layout-right.svg" size={24} />
