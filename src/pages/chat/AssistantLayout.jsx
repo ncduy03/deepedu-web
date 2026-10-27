@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import Logo from '../../components/Logo.jsx';
+import { SidebarLogo } from '../console/ConsoleLayout.jsx';
 import { MaskIcon, SwitchSiteButton } from '../../components/ui/index.jsx';
 import { useSignup } from '../../state/SignupContext.jsx';
 import { useCurrentUser } from '../../state/useCurrentUser.js';
@@ -74,28 +74,21 @@ function Sidebar({ user, history, activeId, onNewChat, onSelect, onCollapse, onS
       <div className="chat-sidebar__nav">
         <div className="chat-sidebar__head">
           {/* Logo is not a link in the assistant: clicking it stays on the page. */}
-          <span className="chat-sidebar__logo" aria-label="DeepEdu" role="img">
-            <Logo set="header" height={32.053} />
-          </span>
+          <SidebarLogo sub="Trợ lý AI" />
           <div className="chat-sidebar__actions">
-            <button type="button" className="chat-icon-btn" onClick={onCollapse} aria-label="Thu gọn thanh bên">
-              <img src={ICON('ic-sidebar-collapse')} alt="" width="20" height="20" />
+            <button type="button" className="console-icon-btn" onClick={onCollapse} aria-label="Thu gọn thanh bên">
+              <MaskIcon src="/assets/console/ic-layout-right.svg" size={24} />
             </button>
           </div>
         </div>
 
         <div className="chat-sidebar__section">
-          {user && (
-            <div className="chat-sidebar__label">
-              <span>Đoạn chat gần đây</span>
-              <img src={ICON('ic-search')} alt="" width="20" height="20" />
-            </div>
-          )}
+          <button type="button" className="chat-new-btn" onClick={onNewChat}>
+            <MaskIcon src={ICON('ic-lucide-pencil')} size={24} />
+            Hội thoại mới
+          </button>
+          {user && <div className="chat-sidebar__label">Đoạn chat gần đây</div>}
           <div className="chat-sidebar__list">
-            <button type="button" className="chat-new-btn" onClick={onNewChat}>
-              <img src={ICON('ic-pen')} alt="" width="20" height="20" />
-              Hội thoại mới
-            </button>
             {user &&
               history.map((h) => (
                 <button
@@ -117,7 +110,6 @@ function Sidebar({ user, history, activeId, onNewChat, onSelect, onCollapse, onS
           to="/tai-khoan"
           icon="/assets/shared/ic-switch-key.svg"
           label="Quản lý API"
-          tone="light"
           component={Link}
         />
       )}
@@ -136,12 +128,10 @@ function Sidebar({ user, history, activeId, onNewChat, onSelect, onCollapse, onS
               <span className="chat-user__name">{user.name}</span>
               <span className="chat-user__email">{user.email}</span>
             </span>
-            <img
-              className={`chat-user__chevron${menuOpen ? ' is-open' : ''}`}
+            <MaskIcon
               src={ICON('ic-alt-arrow-down-user')}
-              alt=""
-              width="20"
-              height="20"
+              size={20}
+              className={`chat-user__chevron${menuOpen ? ' is-open' : ''}`}
             />
           </button>
         </div>

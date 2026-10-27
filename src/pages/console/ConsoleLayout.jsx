@@ -48,19 +48,33 @@ const TITLES = {
 const isProjectDetail = (pathname) =>
   Boolean(matchPath('/tai-khoan/du-an/:projectId/*', pathname));
 
-function ConsoleLogo({ org }) {
-  return (
-    <Link to="/tai-khoan" className="console-logo" aria-label="Về Dashboard">
+/** White DeepEdu logo for the dark sidebars. Without `to` it is not a link (assistant sidebar). */
+export function SidebarLogo({ sub, to, label = 'DeepEdu' }) {
+  const content = (
+    <>
       <span className="console-logo__mark" aria-hidden="true">
         <img className="console-logo__l1" src={CICON('logo-layer1')} alt="" />
         <img className="console-logo__l2" src={CICON('logo-layer2')} alt="" />
       </span>
       <span className="console-logo__text">
         <span className="console-logo__name">DeepEdu</span>
-        <span className="console-logo__sub">{org ? 'Hệ thống quản trị' : 'Tài khoản cá nhân'}</span>
+        <span className="console-logo__sub">{sub}</span>
       </span>
-    </Link>
+    </>
   );
+  return to ? (
+    <Link to={to} className="console-logo" aria-label={label}>
+      {content}
+    </Link>
+  ) : (
+    <span className="console-logo" role="img" aria-label={label}>
+      {content}
+    </span>
+  );
+}
+
+function ConsoleLogo({ org }) {
+  return <SidebarLogo to="/tai-khoan" label="Về Dashboard" sub={org ? 'Hệ thống quản trị' : 'Tài khoản cá nhân'} />;
 }
 
 function Sidebar({ user, onCollapse, onSignOut }) {
