@@ -542,16 +542,17 @@ export default function ProjectDetailPage({ tab = 'keys' }) {
         </div>
       </section>
 
-      <nav className="pj-tabs" aria-label="Chi tiết dự án">
-        <NavLink to={base} end className={({ isActive }) => `pj-tabs__item${isActive ? ' is-active' : ''}`}>
-          API Key <span className="pj-tabs__count">{project.keys.length}</span>
-        </NavLink>
-        {isOrg && (
+      {/* Personal accounts only have API keys, so no tab bar (Figma): the list starts with "Danh sách API Key". */}
+      {isOrg && (
+        <nav className="pj-tabs" aria-label="Chi tiết dự án">
+          <NavLink to={base} end className={({ isActive }) => `pj-tabs__item${isActive ? ' is-active' : ''}`}>
+            API Key <span className="pj-tabs__count">{project.keys.length}</span>
+          </NavLink>
           <NavLink to={`${base}/thanh-vien`} className={({ isActive }) => `pj-tabs__item${isActive ? ' is-active' : ''}`}>
             Thành viên dự án <span className="pj-tabs__count">{project.members.length}</span>
           </NavLink>
-        )}
-      </nav>
+        </nav>
+      )}
 
       {tab === 'keys' ? (
         <KeysTab project={project} paused={paused} onAction={open} />
