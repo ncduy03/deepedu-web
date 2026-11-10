@@ -24,6 +24,49 @@ export function pageItems(total, current) {
   return pages.flatMap((p, i) => (i > 0 && p - pages[i - 1] > 1 ? ['…', p] : [p]));
 }
 
+/** Prev / page numbers / next, as on "Lịch sử & Thanh toán". */
+export function Pagination({ page, pages, onChange }) {
+  return (
+    <nav className="console-pagination" aria-label="Phân trang">
+      <button
+        type="button"
+        className="console-pagination__arrow"
+        onClick={() => onChange(page - 1)}
+        disabled={page === 1}
+        aria-label="Trang trước"
+      >
+        <MaskIcon src={CICON('ic-page-prev')} size={20} />
+      </button>
+      {pageItems(pages, page).map((p, i) =>
+        p === '…' ? (
+          <span key={`gap-${i}`} className="console-pagination__gap">
+            ...
+          </span>
+        ) : (
+          <button
+            key={p}
+            type="button"
+            className={`console-pagination__page${p === page ? ' is-current' : ''}`}
+            aria-current={p === page ? 'page' : undefined}
+            onClick={() => onChange(p)}
+          >
+            {p}
+          </button>
+        ),
+      )}
+      <button
+        type="button"
+        className="console-pagination__arrow"
+        onClick={() => onChange(page + 1)}
+        disabled={page === pages}
+        aria-label="Trang sau"
+      >
+        <MaskIcon src={CICON('ic-page-next')} size={20} />
+      </button>
+    </nav>
+  );
+}
+
 function Select({ prefix, value, onChange, options }) {
   return (
     <label className="console-select">
@@ -226,43 +269,7 @@ export default function TransactionsPage() {
       </p>
 
       {rows.length > 0 && (
-        <nav className="console-pagination" aria-label="Phân trang">
-          <button
-            type="button"
-            className="console-pagination__arrow"
-            onClick={() => setPage((p) => p - 1)}
-            disabled={page === 1}
-            aria-label="Trang trước"
-          >
-            <MaskIcon src={CICON('ic-page-prev')} size={20} />
-          </button>
-          {pageItems(pages, page).map((p, i) =>
-            p === '…' ? (
-              <span key={`gap-${i}`} className="console-pagination__gap">
-                ...
-              </span>
-            ) : (
-              <button
-                key={p}
-                type="button"
-                className={`console-pagination__page${p === page ? ' is-current' : ''}`}
-                aria-current={p === page ? 'page' : undefined}
-                onClick={() => setPage(p)}
-              >
-                {p}
-              </button>
-            ),
-          )}
-          <button
-            type="button"
-            className="console-pagination__arrow"
-            onClick={() => setPage((p) => p + 1)}
-            disabled={page === pages}
-            aria-label="Trang sau"
-          >
-            <MaskIcon src={CICON('ic-page-next')} size={20} />
-          </button>
-        </nav>
+        <Pagination page={page} pages={pages} onChange={setPage} />
       )}
       </section>
     </div>

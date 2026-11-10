@@ -3,7 +3,8 @@ import { Link, matchPath, Navigate, NavLink, Outlet, useLocation, useNavigate } 
 import { MaskIcon, SwitchSiteButton } from '../../components/ui/index.jsx';
 import { useCurrentUser } from '../../state/useCurrentUser.js';
 import { useSignup } from '../../state/SignupContext.jsx';
-import { CARD, PLANS } from './consoleData.js';
+import { CARD, CREDITS, DEFAULT_PLAN } from './consoleData.js';
+import { PRICING_PLANS } from '../../sections/pricingPlans.js';
 import { PICON, useProjects } from './projectsData.js';
 import { ORG_TOPUP } from './orgData.js';
 import { AccountMenu } from '../chat/AssistantLayout.jsx';
@@ -249,7 +250,10 @@ export default function ConsoleLayout() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [collapsed, setCollapsed] = useState(false);
-  const [planId, setPlanId] = useState('plus');
+  const planType = user?.type === 'org' ? 'org' : 'personal';
+  const [planId, setPlanId] = useState(DEFAULT_PLAN[planType]);
+  // Credit wallet shown on "Gói dịch vụ"; top-ups add to `bought`.
+  const [credits, setCredits] = useState(CREDITS);
   // Demo card printed with the account holder's name, as on a real card ("NGUYEN CONG DUY").
   const [card, setCard] = useState(() => ({ ...CARD, holder: user ? toCardName(user.name) : CARD.holder }));
   const projects = useProjects(user);
@@ -269,9 +273,13 @@ export default function ConsoleLayout() {
   // Company email → organization console; webmail → personal console (see state/accountType.js).
   const account = user.type === 'org' ? { type: 'org', ...user.org } : { type: 'personal' };
 
+  const plans = PRICING_PLANS[planType];
   const billing = {
-    plan: PLANS.find((p) => p.id === planId),
+    plans,
+    plan: plans.find((p) => p.id === planId) || plans[0],
     setPlanId,
+    credits,
+    buyCredits: (n) => setCredits((c) => ({ ...c, bought: c.bought + n })),
     card,
     setCard,
     removeCard: () => setCard(null),

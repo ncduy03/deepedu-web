@@ -1,4 +1,5 @@
 // Landing "Bảng giá" plans (Figma DeepEdu_UI › Landing page › Pricing). The first feature of each plan is bold.
+// bonus: % extra credit on top-ups (null = by volume, per contract).
 // cta: "signup" → login, then the plans page; "contact" → "Liên hệ tư vấn Enterprise" popup.
 
 export const AUDIENCES = [
@@ -15,7 +16,9 @@ export const PRICING_INTRO = {
 export const PRICING_PLANS = {
   org: [
     {
+      id: 'free',
       name: 'Free',
+      bonus: 0,
       desc: 'Dành cho team nhỏ muốn trải nghiệm gateway và tích hợp nhanh trước khi mở rộng.',
       price: '0đ',
       cta: 'signup',
@@ -32,7 +35,9 @@ export const PRICING_PLANS = {
       ],
     },
     {
+      id: 'starter',
       name: 'Starter',
+      bonus: 3,
       desc: 'Dành cho startup hoặc team kỹ thuật đang vận hành một sản phẩm AI.',
       price: '790.000đ',
       period: '/ tháng',
@@ -49,7 +54,9 @@ export const PRICING_PLANS = {
       ],
     },
     {
+      id: 'growth',
       name: 'Growth',
+      bonus: 5,
       desc: 'Dành cho công ty đang mở rộng nhiều sản phẩm, project và môi trường.',
       price: '2.490.000đ',
       period: '/ tháng',
@@ -67,7 +74,9 @@ export const PRICING_PLANS = {
       ],
     },
     {
+      id: 'enterprise',
       name: 'Enterprise',
+      bonus: null,
       desc: 'Dành cho tổ chức cần quản trị AI usage tập trung, nhiều team và quy mô lớn.',
       price: 'Liên hệ',
       cta: 'contact',
@@ -85,7 +94,9 @@ export const PRICING_PLANS = {
   ],
   personal: [
     {
+      id: 'free',
       name: 'Free',
+      bonus: 0,
       desc: 'Dành cho developer muốn thử nghiệm AI gateway với vài project nhỏ.',
       price: '0đ',
       cta: 'signup',
@@ -101,7 +112,9 @@ export const PRICING_PLANS = {
       ],
     },
     {
+      id: 'maker',
       name: 'Maker',
+      bonus: 3,
       desc: 'Dành cho freelancer và indie developer đang xây sản phẩm AI thực tế.',
       price: '49.000đ',
       period: '/ tháng',
@@ -117,7 +130,9 @@ export const PRICING_PLANS = {
       ],
     },
     {
+      id: 'pro',
       name: 'Pro',
+      bonus: 5,
       desc: 'Dành cho startup nhỏ và sản phẩm đang có traffic thực.',
       price: '149.000đ',
       period: '/ tháng',

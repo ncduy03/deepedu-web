@@ -1,0 +1,579 @@
+/* "Gói dịch vụ" — DeepEdu_UI › Gói cước & credits (Cá nhân / Tổ chức). */
+
+.plans-page {
+  gap: 32px;
+}
+
+/* ---------- Overview: credit wallet + current plan ---------- */
+.plans-overview {
+  display: grid;
+  grid-template-columns: 480px minmax(0, 1fr);
+  gap: 16px;
+}
+
+.plans-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 240px;
+  padding: 16px;
+  border-radius: var(--ui-radius-sm);
+  background: var(--ui-bg-canvas);
+}
+
+.plans-panel__top {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.plans-panel__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 8px;
+}
+
+.plans-panel__label {
+  margin: 0;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  color: var(--ui-content-medium);
+}
+
+.plans-panel__warning {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  font-size: 12px;
+  line-height: 16px;
+  color: #947300;
+}
+
+.plans-panel__warning img {
+  flex-shrink: 0;
+}
+
+.plans-panel__main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.plans-panel__big {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  min-width: 0;
+  margin: 0;
+  font-size: 44px;
+  line-height: 52px;
+  letter-spacing: -1.32px;
+  font-weight: 700;
+  color: var(--ui-content-strong);
+}
+
+.plans-panel__big span {
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0;
+  color: var(--ui-content-light);
+}
+
+.plans-panel__big--plan {
+  color: var(--ui-content-primary);
+}
+
+.plans-panel__note {
+  max-width: 257px;
+  margin: 0;
+  font-size: 12px;
+  line-height: 16px;
+  font-style: italic;
+  color: var(--ui-content-medium);
+}
+
+.plans-panel__note--wide {
+  max-width: 300px;
+}
+
+.plans-panel__stats {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-radius: var(--ui-radius-sm);
+  background: var(--ui-bg-surface);
+}
+
+.plans-stat {
+  display: flex;
+  flex: 1 0 0;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.plans-stat__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 1000px;
+  background: var(--ui-display-gray-light);
+}
+
+.plans-stat__label,
+.plans-stat__value {
+  margin: 0;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  color: var(--ui-content-medium);
+  white-space: nowrap;
+}
+
+.plans-stat__value strong {
+  font-weight: 700;
+  color: var(--ui-content-strong);
+}
+
+/* ---------- Plan cards ---------- */
+.plans-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.plans-cards--4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.plans-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 486px;
+  padding: 16px;
+  border: 1px solid #e8e8e8;
+  border-radius: var(--ui-radius-sm);
+  background: var(--ui-bg-surface);
+}
+
+.plans-card.is-current {
+  border-color: var(--ui-display-blue);
+  background: #f4f9ff;
+}
+
+.plans-card.is-popular {
+  border-color: #6d4fe7;
+  background: #f9f8ff;
+}
+
+.plans-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 20px;
+}
+
+.plans-card__head h3 {
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.14px;
+  font-weight: 700;
+  color: var(--ui-content-strong);
+}
+
+.plans-card__badge {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 2px 8px;
+  border-radius: 1000px;
+  background: #6d4fe7;
+  color: var(--ui-content-on-colors);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.plans-card__badge--current {
+  background: var(--ui-display-blue);
+}
+
+.plans-card__price {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin: 0;
+  font-size: 24px;
+  line-height: 32px;
+  letter-spacing: -0.48px;
+  font-weight: 700;
+  color: var(--ui-content-strong);
+  white-space: nowrap;
+}
+
+.plans-card__price span {
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0;
+  color: var(--ui-content-light);
+}
+
+.plans-card__contact {
+  margin: 0;
+  font-size: 18px;
+  line-height: 32px;
+  letter-spacing: -0.18px;
+  font-weight: 700;
+  color: var(--ui-content-strong);
+}
+
+.plans-card__desc {
+  min-height: 48px;
+  margin: 0;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--ui-content-medium);
+}
+
+.plans-card__features {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 16px 0 0;
+  border-top: 1px solid var(--ui-border-light);
+  list-style: none;
+}
+
+.plans-card__features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--ui-content-strong);
+}
+
+.plans-card__features li img {
+  flex-shrink: 0;
+}
+
+.plans-card__features li.is-lead {
+  font-weight: 700;
+}
+
+/* ---------- Recent requests ---------- */
+.plans-tabs {
+  padding: 0;
+}
+
+.plans-table td {
+  height: 56px;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.14px;
+}
+
+.plans-table .col-status {
+  width: 260px;
+}
+
+.plans-table .col-credits {
+  width: 240px;
+}
+
+.plans-table .col-cost {
+  width: 200px;
+}
+
+.plans-table__time,
+.plans-table__task {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.plans-table__task {
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0;
+  color: var(--ui-content-light);
+}
+
+.plans-table__credits {
+  color: var(--ui-content-primary);
+}
+
+.plans-table-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 12px;
+}
+
+.plans-table-footer__count {
+  margin: 0;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  color: var(--ui-content-medium);
+}
+
+.plans-table-footer__count strong {
+  font-weight: 700;
+  color: var(--ui-content-strong);
+}
+
+/* ---------- "Nạp thêm credit" dialog ---------- */
+.plans-topup {
+  gap: 16px;
+  padding: 24px;
+}
+
+.plans-topup__title {
+  font-weight: 600;
+}
+
+.plans-topup__balance {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 44px;
+  padding: 0 16px;
+  border-radius: var(--ui-radius-xs);
+  background: var(--ui-display-gray-light);
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: -0.16px;
+  color: var(--ui-content-medium);
+}
+
+.plans-topup__balance strong {
+  margin-right: 4px;
+  color: var(--ui-content-on-primary);
+}
+
+.plans-topup__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.plans-topup__label {
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.14px;
+  font-weight: 500;
+  color: var(--ui-content-strong);
+}
+
+.plans-topup__input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--ui-border-medium);
+  border-radius: var(--ui-radius-xs);
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: -0.16px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.plans-topup__input:focus-within {
+  border-color: var(--ui-border-primary);
+  box-shadow: var(--ui-focus-ring);
+}
+
+.plans-topup__input input {
+  flex: 1 0 0;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: none;
+  font: inherit;
+  font-weight: 700;
+  color: var(--ui-content-on-primary);
+}
+
+.plans-topup__input span {
+  color: var(--ui-content-medium);
+}
+
+.plans-topup__presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.plans-topup__note {
+  margin: -8px 0 8px;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  color: var(--ui-content-medium);
+}
+
+/* Ticket: purple total with a scalloped edge, then a light purple breakdown. */
+.plans-ticket {
+  position: relative;
+  margin-top: 8px;
+}
+
+.plans-ticket__shape {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  height: 114px;
+}
+
+.plans-ticket__total {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--ui-content-on-colors);
+}
+
+.plans-ticket__total p {
+  margin: 0;
+}
+
+.plans-ticket__caption {
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.14px;
+  font-weight: 500;
+}
+
+.plans-ticket__vat {
+  font-size: 12px;
+  line-height: 16px;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.44);
+}
+
+.plans-ticket__vat strong {
+  color: rgba(255, 255, 255, 0.59);
+}
+
+.plans-ticket__amount {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  font-size: 32px;
+  line-height: 40px;
+  letter-spacing: -0.96px;
+  font-weight: 700;
+}
+
+.plans-ticket__amount span {
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0;
+}
+
+.plans-ticket__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 71px 0 0;
+  padding: 69px 16px 16px;
+  border-radius: 0 0 24px 24px;
+  background: #f2f1ff;
+}
+
+.plans-ticket__rows div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 20px;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.14px;
+}
+
+.plans-ticket__rows dt {
+  color: var(--ui-content-medium);
+}
+
+.plans-ticket__rows dt strong {
+  color: var(--ui-content-on-primary);
+}
+
+.plans-ticket__rows dd {
+  margin: 0;
+  font-weight: 600;
+  color: var(--ui-content-on-primary);
+  white-space: nowrap;
+}
+
+.plans-ticket__rows .plans-ticket__after {
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: -0.18px;
+  font-weight: 700;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1200px) {
+  .plans-overview {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .plans-cards--4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .plans-cards,
+  .plans-cards--4 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .plans-card {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .plans-panel__main {
+    flex-wrap: wrap;
+  }
+
+  .plans-panel__big {
+    font-size: 36px;
+    line-height: 44px;
+  }
+
+  .plans-panel__stats {
+    flex-direction: column;
+  }
+}

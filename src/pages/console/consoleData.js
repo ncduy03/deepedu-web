@@ -45,32 +45,59 @@ export function usageFor(periodId) {
 }
 
 // ---------- Plans ----------
-export const PLANS = [
-  { id: 'free', name: 'Free', price: '0đ / Miễn phí', credit: '100 credit', label: 'Free' },
-  { id: 'plus', popular: true, name: 'Plus', price: '79.000đ / tháng', credit: '500 credit', label: 'Plus · 79.000đ / tháng' },
-  { id: 'pro', name: 'Pro', price: '199.000đ / tháng', credit: '1.500 credit', label: 'Pro · 199.000đ / tháng' },
-  { id: 'pro-year', name: 'Pro (năm)', price: '1.990.000đ / năm', credit: '1.500 credit / tháng', label: 'Pro · 1.990.000đ / năm' },
+// Plan cards come from the landing "Bảng giá" data (sections/pricingPlans.js), per account type.
+export const DEFAULT_PLAN = { personal: 'maker', org: 'starter' };
+
+// Current billing cycle (no auto-renewal: the user pays again before `renewOn`).
+export const PLAN_CYCLE = { from: '01/10/26', to: '31/10/26', renewOn: '31/10/26', daysLeft: 5 };
+
+// Credit wallet: balance = bought − used. Top-up credit never expires.
+export const CREDITS = { bought: 10009000, used: 10000 };
+export const VND_PER_CREDIT = 50;
+export const TOPUP_PRESETS = [500, 1000, 5000, 10000];
+
+// ---------- Recent requests ("Request gần đây") ----------
+export const REQUEST_RANGES = [
+  { id: '3d', label: '3 ngày', days: 3 },
+  { id: '7d', label: '7 ngày', days: 7 },
+  { id: '30d', label: '30 ngày', days: 30 },
 ];
 
-// Feature rows of the comparison table; `plans` lists which plans include it.
-export const PLAN_SECTIONS = [
-  {
-    title: 'Chi phí & Hạn mức Credit (DeepEdu)',
-    rows: [
-      { label: 'Giá dịch vụ', value: (p) => p.price },
-      { label: 'Credit hàng tháng', value: (p) => p.credit },
-    ],
-  },
-  {
-    title: 'Tính năng cốt lõi',
-    rows: [
-      { label: 'Trợ lý DeepEdu (chat)', plans: ['free', 'plus', 'pro', 'pro-year'] },
-      { label: 'Soạn giáo án', plans: ['free', 'plus', 'pro', 'pro-year'] },
-      { label: 'Tạo bài tập', plans: ['plus', 'pro', 'pro-year'] },
-      { label: 'Tạo bản trình chiếu', plans: ['pro', 'pro-year'] },
-    ],
-  },
+// [days ago, time, task, status, credits]
+const REQUEST_ROWS = [
+  [0, '14:25', 'Soạn giáo án AI (CV 5512)', 'success', 15],
+  [0, '11:02', 'Tạo đề kiểm tra 15 phút', 'success', 12],
+  [1, '16:40', 'Tóm tắt chương 3 Kinh tế vi mô', 'success', 8],
+  [1, '09:15', 'Soạn giáo án AI (CV 5512)', 'failed', 0],
+  [2, '20:31', 'Tạo bản trình chiếu Quang hợp', 'success', 24],
+  [2, '08:47', 'Chấm bài luận tiếng Anh', 'success', 10],
+  [4, '14:05', 'Soạn giáo án AI (CV 5512)', 'success', 15],
+  [5, '10:22', 'Tạo bài tập Hình học 9', 'success', 9],
+  [6, '19:58', 'Kế hoạch ôn thi IELTS 6.5', 'success', 6],
+  [9, '15:11', 'Tạo đề kiểm tra 1 tiết', 'success', 18],
+  [12, '09:36', 'Soạn giáo án AI (CV 5512)', 'success', 15],
+  [15, '21:03', 'Giải thích quá trình quang hợp', 'failed', 0],
+  [19, '13:44', 'Tạo bản trình chiếu Lịch sử 11', 'success', 22],
+  [23, '08:20', 'Tóm tắt sách giáo khoa Sinh 10', 'success', 11],
+  [27, '17:52', 'Soạn giáo án AI (CV 5512)', 'success', 15],
 ];
+
+const REQUEST_TODAY = new Date(2026, 10, 3);
+const pad2 = (n) => String(n).padStart(2, '0');
+
+export const REQUESTS = REQUEST_ROWS.map(([daysAgo, time, task, status, credits], i) => {
+  const d = new Date(REQUEST_TODAY);
+  d.setDate(d.getDate() - daysAgo);
+  return {
+    id: i,
+    daysAgo,
+    time: `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}/${d.getFullYear()} ${time}`,
+    task,
+    status,
+    credits,
+    cost: credits * 500,
+  };
+});
 
 // ---------- Transactions ----------
 const card = { brand: 'visa', label: '•••• 4242' };
