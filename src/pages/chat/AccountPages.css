@@ -21,10 +21,6 @@
   width: 720px;
 }
 
-.acc-content--edit {
-  gap: 20px;
-}
-
 .acc-content--feedback {
   width: 880px;
 }
@@ -136,46 +132,19 @@
 }
 
 /* ---------- Edit form ---------- */
-.acc-readonly .ui-field__control {
-  border-style: dashed;
-  border-width: 1px;
-  padding: 0 16px;
+.acc-disabled .ui-field__control {
+  background: var(--ui-bg-canvas);
 }
 
-.acc-readonly .ui-field__control:focus-within {
-  border-color: var(--ui-border-medium);
-  box-shadow: none;
-}
-
-.acc-year {
-  width: 280px;
-  max-width: 100%;
+.acc-disabled .ui-field__input {
+  color: var(--ui-content-light);
+  cursor: not-allowed;
 }
 
 .acc-group {
   display: flex;
   flex-direction: column;
   gap: 10px;
-}
-
-.acc-hint {
-  margin-left: 4px;
-  font-size: 12px;
-  line-height: 16px;
-  font-weight: 400;
-  color: var(--ui-content-light);
-}
-
-.acc-interest-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.acc-interest-group__title {
-  font-size: 12px;
-  line-height: 16px;
-  color: var(--ui-content-light);
 }
 
 .acc-chips {
