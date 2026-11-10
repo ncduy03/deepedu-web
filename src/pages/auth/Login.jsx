@@ -1,12 +1,20 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { AuthCard, Separator, TextField } from '../../components/ui/index.jsx';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { AuthCard, MaskIcon, Separator, TextField } from '../../components/ui/index.jsx';
 import { isValidEmail } from '../../state/SignupContext.jsx';
+import { ACCOUNT_ROLES, normalizeAccountType } from '../../state/accountType.js';
 import CheckEmailCard from './CheckEmailCard.jsx';
 import './auth.css';
 
-/** "Đăng nhập Client Portal" — email link sign-in. After sending, shows "Kiểm tra email của bạn". */
+/**
+ * "Đăng nhập Client Portal" — email link sign-in. The visitor picks a role (Cá nhân / Tổ chức) first.
+ * Router state may carry `role` (pre-selected role) and `next` (page to open after sign-in, e.g. from the pricing CTA).
+ * After sending, shows "Kiểm tra email của bạn".
+ */
 export default function Login() {
+  const { state } = useLocation();
+  const next = state?.next;
+  const [role, setRole] = useState(() => normalizeAccountType(state?.role));
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [sentTo, setSentTo] = useState('');
@@ -28,7 +36,7 @@ export default function Login() {
         email={sentTo}
         resendLabel="Gửi lại liên kết"
         onChangeEmail={() => setSentTo('')}
-        onDemoOpen={() => navigate('/xac-nhan-dang-nhap', { state: { email: sentTo } })}
+        onDemoOpen={() => navigate('/xac-nhan-dang-nhap', { state: { email: sentTo, role, next } })}
       />
     );
   }
@@ -47,6 +55,26 @@ export default function Login() {
         <h1 className="ui-h1">Đăng nhập Client Portal</h1>
 
         <div className="stack-16">
+          <div className="role-picker">
+            <span className="ui-field__label" id="login-role-label">
+              Đăng nhập với vai trò
+            </span>
+            <div className="role-picker__options" role="radiogroup" aria-labelledby="login-role-label">
+              {ACCOUNT_ROLES.map((r) => (
+                <button
+                  key={r.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={role === r.id}
+                  className={`role-picker__option${role === r.id ? ' is-active' : ''}`}
+                  onClick={() => setRole(r.id)}
+                >
+                  <MaskIcon src={r.icon} size={18} />
+                  {r.label}
+                </button>
+              ))}
+            </div>
+          </div>
           <TextField
             label="Email"
             type="email"

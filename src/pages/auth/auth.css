@@ -986,3 +986,51 @@
     align-items: stretch;
   }
 }
+
+/* ---------- Login: role picker (Cá nhân / Tổ chức) ---------- */
+.role-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.role-picker__options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.role-picker__option {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--ui-border-medium);
+  border-radius: var(--ui-radius-xs);
+  background: var(--ui-bg-surface);
+  font: inherit;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.14px;
+  font-weight: 600;
+  color: var(--ui-content-medium);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+.role-picker__option:hover {
+  color: var(--ui-content-strong);
+}
+
+.role-picker__option.is-active {
+  border: 1.5px solid var(--ui-border-primary);
+  background: var(--ui-bg-fill-primary-subtle);
+  color: var(--ui-content-primary);
+}
+
+.role-picker__option:focus-visible {
+  outline: none;
+  box-shadow: var(--ui-focus-ring);
+}

@@ -1,30 +1,33 @@
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useSignup } from '../../state/SignupContext.jsx';
-import { accountTypeFor, orgNameFor } from '../../state/accountType.js';
+import { DEMO_ORG, normalizeAccountType } from '../../state/accountType.js';
 import './auth.css';
 
 /**
  * "Xác nhận truy cập DeepEdu" — opened from the email link (demo: "Mở liên kết đăng nhập").
- * The email comes in router state; "Tiếp tục" signs in and opens the assistant.
+ * Router state carries the email, the role picked at login and an optional `next` page;
+ * "Tiếp tục" signs in and opens `next` (default: the assistant).
  */
 export default function ConfirmAccess() {
-  const email = useLocation().state?.email;
+  const { state } = useLocation();
+  const email = state?.email;
+  const accountType = normalizeAccountType(state?.role);
   const { personal, updatePersonal, resetPersonal } = useSignup();
   const navigate = useNavigate();
 
   if (!email) return <Navigate to="/dang-nhap" replace />;
 
-  // Company email → organization account: also show which organization is being entered.
-  const org = accountTypeFor(email) === 'org';
+  // Organization role: also show which organization is being entered.
+  const org = accountType === 'org';
 
   const signIn = () => {
     // Same email as the account already in this browser: keep its profile; otherwise start a fresh one.
-    if (personal.email === email) updatePersonal({ registered: true });
+    if (personal.email === email) updatePersonal({ accountType, registered: true });
     else {
       resetPersonal();
-      updatePersonal({ email, registered: true });
+      updatePersonal({ email, accountType, registered: true });
     }
-    navigate('/tro-ly', { replace: true });
+    navigate(state?.next || '/tro-ly', { replace: true });
   };
 
   return (
@@ -39,7 +42,7 @@ export default function ConfirmAccess() {
           {org && (
             <div className="confirm-access__row">
               <dt>Tổ chức:</dt>
-              <dd className="confirm-access__org">{orgNameFor(email)}</dd>
+              <dd className="confirm-access__org">{DEMO_ORG.name}</dd>
             </div>
           )}
           <div className="confirm-access__row">

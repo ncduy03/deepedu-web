@@ -5,6 +5,7 @@ import Solutions from '../sections/Solutions.jsx';
 import TechStack from '../sections/TechStack.jsx';
 import Vision from '../sections/Vision.jsx';
 import Partners from '../sections/Partners.jsx';
+import Pricing from '../sections/Pricing.jsx';
 import CallToAction from '../sections/CallToAction.jsx';
 import Footer from '../sections/Footer.jsx';
 import './LandingPage.css';
@@ -20,6 +21,7 @@ export default function LandingPage() {
         <TechStack />
         <Vision />
         <Partners />
+        <Pricing />
         <CallToAction />
       </main>
       <Footer />

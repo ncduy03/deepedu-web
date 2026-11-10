@@ -1,29 +1,12 @@
-// Temporary demo rule: the email domain decides the account type.
-// Free webmail (gmail.com, …) → personal account; any other domain (e.g. sotatek.com) → organization.
+// Account type is chosen on the login screen ("Cá nhân" / "Tổ chức"); the email domain no longer decides it.
 
-const PERSONAL_DOMAINS = new Set([
-  'gmail.com',
-  'googlemail.com',
-  'yahoo.com',
-  'yahoo.com.vn',
-  'outlook.com',
-  'hotmail.com',
-  'live.com',
-  'icloud.com',
-]);
+export const ACCOUNT_ROLES = [
+  { id: 'personal', label: 'Cá nhân', icon: '/assets/auth/ic-user.svg' },
+  { id: 'org', label: 'Tổ chức', icon: '/assets/auth/ic-briefcase.svg' },
+];
 
-const domainOf = (email) => String(email).trim().toLowerCase().split('@')[1] || '';
+/** "org" or "personal" (anything else falls back to personal). */
+export const normalizeAccountType = (type) => (type === 'org' ? 'org' : 'personal');
 
-/** "personal" for free webmail addresses, "org" for company domains. */
-export function accountTypeFor(email) {
-  const domain = domainOf(email);
-  return !domain || PERSONAL_DOMAINS.has(domain) ? 'personal' : 'org';
-}
-
-// Demo organization shown for company emails (sample data from the "Dashboard - org" design).
+// Demo organization for organization accounts (sample data from the "Dashboard - org" design).
 export const DEMO_ORG = { name: 'Trường THCS Ba Đình', code: 'DEEPEDU-2026-0022' };
-
-/** Organization name shown when signing in with a company email: "duy@sotatek.com" → "SOTATEK". */
-export function orgNameFor(email) {
-  return domainOf(email).split('.')[0].toUpperCase();
-}

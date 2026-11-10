@@ -7,6 +7,7 @@ export const NAV_LINKS = [
   { label: 'Tầng công nghệ', href: '#cong-nghe' },
   { label: 'Đối tác', href: '#doi-tac' },
   { label: 'Tầm nhìn', href: '#tam-nhin' },
+  { label: 'Bảng giá', href: '#bang-gia' },
 ];
 
 export default function Header() {
@@ -27,8 +28,8 @@ export default function Header() {
           <Link to="/dang-ky" className="btn btn--brand btn--md">
             Đăng ký ngay
           </Link>
-          <Link to="/tro-ly" className="btn btn--brand-secondary btn--md">
-            Trải nghiệm DeepEdu
+          <Link to="/dang-nhap" className="btn btn--brand-secondary btn--md">
+            Đăng nhập
           </Link>
         </div>
       </div>

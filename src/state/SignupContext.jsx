@@ -11,11 +11,12 @@ const EMPTY_PERSONAL = {
   acceptTerms: false,
   marketing: false,
   interests: [],
+  accountType: 'personal',
   registered: false,
 };
 
 // Fields of the signed-in demo account that are remembered across reloads.
-const SAVED_FIELDS = ['email', 'fullName', 'role', 'school', 'birthYear', 'interests', 'registered'];
+const SAVED_FIELDS = ['email', 'fullName', 'role', 'school', 'birthYear', 'interests', 'accountType', 'registered'];
 
 const EMPTY_ORG = {
   legalName: '',

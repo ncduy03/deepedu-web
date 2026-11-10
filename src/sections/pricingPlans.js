@@ -1,0 +1,137 @@
+// Landing "Bảng giá" plans (Figma DeepEdu_UI › Landing page › Pricing). The first feature of each plan is bold.
+// cta: "signup" → login, then the plans page; "contact" → "Liên hệ tư vấn Enterprise" popup.
+
+export const AUDIENCES = [
+  { id: 'org', label: 'Tổ chức' },
+  { id: 'personal', label: 'Cá nhân' },
+];
+
+export const PRICING_INTRO = {
+  org: 'Giải pháp AI gateway cho nhóm và tổ chức – bắt đầu miễn phí, mở rộng thành viên, dự án, API key và giới hạn request khi bạn tăng trưởng.',
+  personal:
+    'Bắt đầu miễn phí với credit dùng thử, nâng cấp khi sản phẩm của bạn cần thêm dự án, API key và giới hạn request.',
+};
+
+export const PRICING_PLANS = {
+  org: [
+    {
+      name: 'Free',
+      desc: 'Dành cho team nhỏ muốn trải nghiệm gateway và tích hợp nhanh trước khi mở rộng.',
+      price: '0đ',
+      cta: 'signup',
+      features: [
+        'Tặng 5.000 credit dùng thử',
+        'Nạp thêm tối đa 30.000 credit / tháng',
+        '2 dự án',
+        '1 thành viên',
+        '3 API keys',
+        '20 RPM, 500 requests / ngày',
+        '3 concurrent requests',
+        'Gán owner cho API key',
+        'Lưu request log 3 ngày',
+      ],
+    },
+    {
+      name: 'Starter',
+      desc: 'Dành cho startup hoặc team kỹ thuật đang vận hành một sản phẩm AI.',
+      price: '790.000đ',
+      period: '/ tháng',
+      cta: 'signup',
+      features: [
+        'Bonus 3% khi nạp thêm credit',
+        '10 dự án',
+        '5 thành viên',
+        '30 API keys',
+        '40 RPM, 5.000 requests / ngày',
+        '10 concurrent requests',
+        'Gán owner cho API key',
+        'Lưu request log 7 ngày',
+      ],
+    },
+    {
+      name: 'Growth',
+      desc: 'Dành cho công ty đang mở rộng nhiều sản phẩm, project và môi trường.',
+      price: '2.490.000đ',
+      period: '/ tháng',
+      popular: true,
+      cta: 'signup',
+      features: [
+        'Bonus 5% khi nạp thêm credit',
+        '40 dự án',
+        '25 thành viên',
+        '120 API keys',
+        '120 RPM, 25.000 requests / ngày',
+        '30 concurrent requests',
+        'Gán owner cho API key',
+        'Lưu request log 30 ngày',
+      ],
+    },
+    {
+      name: 'Enterprise',
+      desc: 'Dành cho tổ chức cần quản trị AI usage tập trung, nhiều team và quy mô lớn.',
+      price: 'Liên hệ',
+      cta: 'contact',
+      features: [
+        'Bonus theo volume khi nạp credit',
+        'Không giới hạn dự án',
+        'Số thành viên tuỳ chỉnh theo hợp đồng',
+        'Không giới hạn API keys',
+        'RPM và giới hạn request / ngày tuỳ chỉnh',
+        'Số request đồng thời tuỳ chỉnh',
+        'Gán owner cho API key',
+        'Lưu request log 90+ ngày',
+      ],
+    },
+  ],
+  personal: [
+    {
+      name: 'Free',
+      desc: 'Dành cho developer muốn thử nghiệm AI gateway với vài project nhỏ.',
+      price: '0đ',
+      cta: 'signup',
+      features: [
+        'Tặng 2.000 credit dùng thử',
+        'Nạp thêm tối đa 10.000 credit / tháng',
+        '1 dự án',
+        '2 API keys',
+        '10 RPM, 200 requests / ngày',
+        '2 concurrent requests',
+        'Dashboard cơ bản',
+        'Lưu request log 3 ngày',
+      ],
+    },
+    {
+      name: 'Maker',
+      desc: 'Dành cho freelancer và indie developer đang xây sản phẩm AI thực tế.',
+      price: '49.000đ',
+      period: '/ tháng',
+      cta: 'signup',
+      features: [
+        'Bonus 3% khi nạp thêm credit',
+        '5 dự án',
+        '10 API keys',
+        '40 RPM, 3.000 requests / ngày',
+        '6 concurrent requests',
+        'Dashboard đầy đủ',
+        'Lưu request log 7 ngày',
+      ],
+    },
+    {
+      name: 'Pro',
+      desc: 'Dành cho startup nhỏ và sản phẩm đang có traffic thực.',
+      price: '149.000đ',
+      period: '/ tháng',
+      popular: true,
+      cta: 'signup',
+      features: [
+        'Bonus 5% khi nạp thêm credit',
+        '20 dự án',
+        '30 API keys',
+        '120 RPM, 12.000 requests / ngày',
+        '20 concurrent requests',
+        'Dashboard đầy đủ',
+        'Lưu request log 30 ngày',
+      ],
+    },
+  ],
+};
