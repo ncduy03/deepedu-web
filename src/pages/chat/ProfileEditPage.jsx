@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Navigate, useNavigate, useOutletContext } from 'react-router-dom';
 import { TextField } from '../../components/ui/index.jsx';
 import { useSignup } from '../../state/SignupContext.jsx';
-import { INTEREST_GROUPS, ROLES, roleLabel } from '../../state/profileOptions.js';
+import { INTEREST_GROUPS, ROLES } from '../../state/profileOptions.js';
 import { ProfileHeader } from './ProfilePage.jsx';
 import './AccountPages.css';
 
@@ -53,7 +53,7 @@ export default function ProfileEditPage() {
   return (
     <div className="acc-scroll">
       <form className="acc-content acc-content--edit" onSubmit={save} noValidate>
-        <ProfileHeader user={user} role={roleLabel(form.role)} />
+        <ProfileHeader user={user} />
         <hr className="acc-separator acc-separator--tight" />
 
         <section className="acc-card acc-card--form">

@@ -17,6 +17,10 @@
   margin: 0 auto;
 }
 
+.acc-content--profile {
+  width: 720px;
+}
+
 .acc-content--edit {
   gap: 20px;
 }
@@ -40,7 +44,7 @@
   width: 72px;
   height: 72px;
   border-radius: 1000px;
-  background: var(--ui-bg-fill-primary);
+  background: linear-gradient(135deg, var(--ui-bg-fill-primary) 0%, #e46ab5 100%);
   color: var(--ui-content-on-colors);
   font-size: 24px;
   line-height: 32px;
@@ -64,28 +68,13 @@
   color: var(--ui-content-strong);
 }
 
-.acc-header__tags {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.acc-header__role {
+.acc-header__email {
   font-size: 14px;
   line-height: 20px;
   letter-spacing: -0.14px;
   color: var(--ui-content-medium);
-}
-
-.acc-badge {
-  padding: 2px 8px;
-  border-radius: 1000px;
-  background: var(--ui-display-primary-medium);
-  font-size: 12px;
-  line-height: 16px;
-  font-weight: 700;
-  color: var(--ui-content-primary-press);
-  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .acc-separator {
@@ -97,11 +86,6 @@
 }
 
 /* ---------- Cards ---------- */
-.acc-cards {
-  display: flex;
-  gap: 20px;
-}
-
 .acc-card {
   flex: 1 0 0;
   min-width: 0;
@@ -114,10 +98,6 @@
   border: 1px solid var(--ui-border-light);
 }
 
-.acc-cards .acc-card {
-  min-height: 262px;
-}
-
 .acc-card--form {
   gap: 24px;
 }
@@ -128,16 +108,6 @@
   letter-spacing: -0.18px;
   font-weight: 700;
   color: var(--ui-content-strong);
-}
-
-.acc-card__row {
-  display: flex;
-  gap: 24px;
-}
-
-.acc-card__row > * {
-  flex: 1 0 0;
-  min-width: 0;
 }
 
 .acc-field {
@@ -163,18 +133,6 @@
 
 .acc-field__value.is-empty {
   color: var(--ui-content-light);
-}
-
-.acc-field__value--inline {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.acc-note {
-  font-size: 12px;
-  line-height: 16px;
-  color: var(--ui-content-medium);
 }
 
 /* ---------- Edit form ---------- */
@@ -456,11 +414,6 @@
 
 /* ---------- Responsive ---------- */
 @media (max-width: 760px) {
-  .acc-cards,
-  .acc-card__row {
-    flex-direction: column;
-  }
-
   .acc-header {
     flex-wrap: wrap;
   }

@@ -18,7 +18,7 @@ const PAGES = {
 };
 
 /** Account menu (avatar + name at the bottom of the sidebar). Also used by the management console. */
-export function AccountMenu({ onClose, onSignOut, className = '', signOutOnly = false }) {
+export function AccountMenu({ onClose, onSignOut, className = '', compact = false }) {
   const { pathname } = useLocation();
   const ref = useRef(null);
 
@@ -48,11 +48,11 @@ export function AccountMenu({ onClose, onSignOut, className = '', signOutOnly = 
 
   return (
     <div className={`account-menu ${className}`} role="menu" ref={ref}>
-      {/* `signOutOnly`: the management console temporarily shows just "Đăng xuất". */}
-      {!signOutOnly && (
+      {item('/tro-ly/ho-so', 'ic-menu-user', 'Hồ sơ tài khoản')}
+      <hr className="account-menu__divider" />
+      {/* `compact`: the management console shows only "Hồ sơ tài khoản" and "Đăng xuất". */}
+      {!compact && (
         <>
-          {item('/tro-ly/ho-so', 'ic-menu-user', 'Hồ sơ tài khoản')}
-          <hr className="account-menu__divider" />
           {item('/tai-khoan/goi-dich-vu', 'ic-menu-credit-card', 'Gói cước & thanh toán')}
           <hr className="account-menu__divider" />
           {item('/tro-ly/gop-y', 'ic-menu-message', 'Góp ý sản phẩm')}

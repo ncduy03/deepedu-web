@@ -142,7 +142,7 @@ function Sidebar({ user, onCollapse, onSignOut }) {
       <SwitchSiteButton to="/tro-ly" icon="/assets/shared/ic-switch-sparkles.svg" label="Chatbot" component={Link} />
 
       <div className="console-user-wrap">
-        {menuOpen && <AccountMenu signOutOnly onClose={() => setMenuOpen(false)} onSignOut={onSignOut} />}
+        {menuOpen && <AccountMenu compact onClose={() => setMenuOpen(false)} onSignOut={onSignOut} />}
         <button
           type="button"
           className="console-user"
@@ -220,7 +220,7 @@ function SidebarRail({ user, onExpand, onSignOut }) {
 
       <div className="console-rail__user">
         {menuOpen && (
-          <AccountMenu signOutOnly className="account-menu--rail" onClose={() => setMenuOpen(false)} onSignOut={onSignOut} />
+          <AccountMenu compact className="account-menu--rail" onClose={() => setMenuOpen(false)} onSignOut={onSignOut} />
         )}
         <button
           type="button"
